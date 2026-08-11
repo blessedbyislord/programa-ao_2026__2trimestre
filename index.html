@@ -20,7 +20,7 @@
             background-color: #f4f6f9;
             color: #2c3e50;
             line-height: 1.6;
-            overflow-x: hidden;
+            overflow: hidden; /* Trava a rolagem inicial por causa da Splash Screen */
         }
 
         /* ==========================================
@@ -116,7 +116,7 @@
         }
 
         /* ==========================================
-           2. ANIMAÇÃO DE LÂMPADAS PISCANDO
+           2. ANIMAÇÃO DE LÂMPADAS PISCANDO (HEADER)
            ========================================== */
         @keyframes piscarLuz {
             0%, 100% {
@@ -139,7 +139,7 @@
         }
 
         /* ==========================================
-           3. OVERLAY DE LOGIN (OPCIONAL)
+           3. OVERLAY DE LOGIN E MODAL
            ========================================== */
         .auth-overlay {
             position: fixed;
@@ -606,7 +606,7 @@
 
     <div id="splashScreen" class="splash-overlay">
         <div class="splash-content">
-            <div class="splash-lamp-wrapper">
+            <div class="splash-lamp-wrapper" onclick="iniciarSite()">
                 <span id="splashLamp" class="splash-lamp-icon">💡</span>
             </div>
             <h1 class="splash-title">GAME DO SABER</h1>
@@ -789,7 +789,10 @@
                 lamp.classList.add('ligada');
             }
 
-            // 2. Transição para desaparecer e liberar o site
+            // 2. Libera a rolagem do body
+            document.body.style.overflow = 'auto';
+
+            // 3. Transição para desaparecer e liberar o site
             setTimeout(() => {
                 if (splash) {
                     splash.style.opacity = '0';
@@ -991,8 +994,10 @@
             } catch(err){}
 
             alert('Senha alterada com sucesso!');
-            document.getElementById('formReset').reset();
-            document.getElementById('formCodigoSenha').reset();
+            const formR = document.getElementById('formReset');
+            const formC = document.getElementById('formCodigoSenha');
+            if(formR) formR.reset();
+            if(formC) formC.reset();
             mostrarFormAuth('formLogin');
         }
 
@@ -1025,6 +1030,7 @@
 
             const target = document.getElementById(idAba);
             if(target) target.classList.add('active');
+            
             if(event && event.currentTarget) {
                 event.currentTarget.classList.add('active');
             }
