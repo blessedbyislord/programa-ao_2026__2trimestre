@@ -4,46 +4,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GAME-SABER</title>
-  <link rel="stylesheet" href="style.css">
+  <title>GAME DO SABER</title>
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    #container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
+    /* Estilos Gerais */
+    * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    img {
-      max-width: 600px;
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    body {
+      background-color: #f4f7f6;
+      color: #333;
     }
 
-    figure {
-      margin: 20px 0;
+    /* Cabeçalho e Abas no Topo */
+    header {
+      background-color: #1a365d;
+      color: white;
+      text-align: center;
+      padding-top: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-  </style>
-</head>
 
-<body>
+    header h1 {
+      font-size: 2rem;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
 
-  <div id="container">
+    header p {
+      font-size: 0.9rem;
+      color: #cbd5e0;
+      margin-bottom: 15px;
+    }
 
-    <h1><b><u>GAME DO SABER</u></b></h1>
-    <p>NOSSA ESCOLA, NOSSO COMPROMISSO</p>
-    <p><u>O QUE NÓS PODEMOS FAZER PARA TORNAR NOSSA ESCOLA AINDA MELHOR?</u></p>
+    /* Menu de Abas */
+    .tabs-menu {
+      display: flex;
+      justify-content: center;
+      background-color: #2b6cb0;
+      list-style: none;
+    }
 
-    <figure>
+    .tab-button {
+      padding: 12px 24px;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .tab-button:hover {
+      background-color: #2c5282;
+    }
+
+    /* Aba ativa */
+    .tab-button.active {
+      background-color: #f4f7f6;
+      color: #1a365d;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    /* Conteúdo das Abas */
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .tab-content {
+      display: none; /* Esconde o conteúdo por padrão */
+      animation: fadeIn 0.
