@@ -23,7 +23,26 @@
         }
 
         /* ==========================================
-           2. TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO)
+           2. ANIMAÇÕES (LÂMPADAS PISCANDO)
+           ========================================== */
+        @keyframes lampFlicker {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 12px #f59e0b); transform: scale(1); }
+            30% { opacity: 0.3; filter: none; transform: scale(0.95); }
+            35% { opacity: 1; filter: drop-shadow(0 0 15px #fbbf24); transform: scale(1.05); }
+            70% { opacity: 0.4; filter: none; transform: scale(0.98); }
+            75% { opacity: 1; filter: drop-shadow(0 0 18px #f59e0b); transform: scale(1); }
+        }
+
+        .lampada-animada {
+            display: inline-block;
+            font-size: 2rem;
+            animation: lampFlicker 3s infinite ease-in-out;
+            margin: 0 8px;
+            vertical-align: middle;
+        }
+
+        /* ==========================================
+           3. TELA DE AUTENTICAÇÃO (LOGIN OPCIONAL)
            ========================================== */
         .auth-overlay {
             position: fixed;
@@ -140,6 +159,25 @@
             color: #1b365d;
         }
 
+        .btn-guest-opt {
+            background: #e2e8f0;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .btn-guest-opt:hover {
+            background: #cbd5e1;
+            color: #0f172a;
+        }
+
         .link-esqueci {
             font-size: 0.85rem;
             color: #0284c7;
@@ -149,7 +187,7 @@
         }
 
         /* ==========================================
-           3. PAINEL DE USUÁRIO E CABEÇALHO
+           4. PAINEL DE USUÁRIO E CABEÇALHO
            ========================================== */
         .user-bar {
             background: #0f172a;
@@ -162,7 +200,7 @@
         }
 
         .user-bar button {
-            background: #ef4444;
+            background: #3b82f6;
             color: #ffffff;
             border: none;
             padding: 6px 14px;
@@ -173,6 +211,14 @@
         }
 
         .user-bar button:hover {
+            background: #2563eb;
+        }
+
+        .user-bar button.btn-logout {
+            background: #ef4444;
+        }
+
+        .user-bar button.btn-logout:hover {
             background: #dc2626;
         }
 
@@ -206,7 +252,7 @@
         }
 
         /* ==========================================
-           4. ABAS DE NAVEGAÇÃO
+           5. ABAS DE NAVEGAÇÃO
            ========================================== */
         .tabs-nav {
             display: flex;
@@ -260,7 +306,7 @@
         }
 
         /* ==========================================
-           5. CARDS E GALERIAS
+           6. CARDS E GALERIAS
            ========================================== */
         .titulo-secao {
             text-align: center;
@@ -343,7 +389,7 @@
         }
 
         /* ==========================================
-           6. FORMULÁRIO DE PROPOSTAS
+           7. FORMULÁRIO DE PROPOSTAS & AGRADECIMENTO
            ========================================== */
         .form-box {
             background: #ffffff;
@@ -411,6 +457,85 @@
             color: #1b365d;
         }
 
+        /* Layout Card de Agradecimento */
+        .thanks-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1b365d 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 40px 25px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .thanks-card h3 {
+            font-size: 2.2rem;
+            color: #00d2ff;
+            margin-bottom: 12px;
+        }
+
+        .thanks-card p {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ==========================================
+           8. ABA DE PERFIL DO USUÁRIO
+           ========================================== */
+        .perfil-card {
+            background: #ffffff;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .perfil-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #1b365d, #00d2ff);
+            color: white;
+            font-size: 2.8rem;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .perfil-info {
+            margin-bottom: 20px;
+        }
+
+        .perfil-info h4 {
+            font-size: 1.5rem;
+            color: #1b365d;
+        }
+
+        .perfil-info p {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .perfil-badge {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0284c7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
         footer {
             text-align: center;
             padding: 25px;
@@ -426,7 +551,7 @@
     <div id="authOverlay" class="auth-overlay">
         <div class="auth-card">
             <div class="auth-header">
-                <h2>GAME DO SABER</h2>
+                <h2><span class="lampada-animada">💡</span> GAME DO SABER</h2>
                 <p>Colégio Roberto Langer Junior</p>
             </div>
 
@@ -441,6 +566,7 @@
                     <input type="password" id="loginSenha" placeholder="Sua Senha" required>
                     <span class="link-esqueci" onclick="mostrarFormAuth('formReset')">Esqueceu a senha?</span>
                     <button type="submit" class="btn-auth">Acessar o Site</button>
+                    <button type="button" class="btn-guest-opt" onclick="entrarComoConvidado()">Continuar como Convidado</button>
                 </form>
 
                 <form id="formCadastro" class="auth-form" onsubmit="cadastrarUsuario(event)">
@@ -449,6 +575,7 @@
                     <input type="email" id="cadEmail" placeholder="Seu E-mail" required>
                     <input type="password" id="cadSenha" placeholder="Crie uma Senha" required>
                     <button type="submit" class="btn-auth">Criar Conta</button>
+                    <button type="button" class="btn-guest-opt" onclick="entrarComoConvidado()">Continuar como Convidado</button>
                 </form>
 
                 <form id="formReset" class="auth-form" onsubmit="solicitarCodigoReset(event)">
@@ -468,13 +595,13 @@
         </div>
     </div>
 
-    <div id="userBar" class="user-bar" style="display:none;">
-        <span>Bem-vindo(a), <strong id="userNameDisplay"></strong> (<span id="userTurmaDisplay"></span>)</span>
-        <button onclick="fazerLogout()">Sair</button>
+    <div id="userBar" class="user-bar">
+        <span id="userInfoText">Modo Convidado (Sem Login)</span>
+        <button id="userBarBtn" onclick="abrirModalAuth()">Fazer Login</button>
     </div>
 
     <header>
-        <h1>GAME DO SABER</h1>
+        <h1><span class="lampada-animada">💡</span> GAME DO SABER <span class="lampada-animada">💡</span></h1>
         <h2>Colégio Estadual Roberto Langer Junior</h2>
         <p>NOSSA ESCOLA, NOSSO COMPROMISSO</p>
     </header>
@@ -484,6 +611,7 @@
         <button class="tab-btn" onclick="trocarAba(event, 'aba-conscientizacao')">Conscientização</button>
         <button class="tab-btn" onclick="trocarAba(event, 'aba-acoes')">Ações e Galeria</button>
         <button class="tab-btn" onclick="trocarAba(event, 'aba-propostas')">Avaliação & Ideias</button>
+        <button class="tab-btn" onclick="trocarAba(event, 'aba-perfil')">Meu Perfil</button>
     </nav>
 
     <main id="aba-escola" class="tab-content active">
@@ -561,17 +689,28 @@
                 <button type="submit" class="btn-submit">Enviar Proposta por E-mail</button>
             </form>
         </div>
+
+        <div class="thanks-card">
+            <h3><span class="lampada-animada">💡</span> OBRIGADO POR PARTICIPAR!</h3>
+            <p>Sua voz e sua proposta são fundamentais para construirmos uma escola cada vez melhor. Juntos, estamos transformando o Colégio Estadual Roberto Langer Junior!</p>
+        </div>
+    </section>
+
+    <section id="aba-perfil" class="tab-content">
+        <h3 class="titulo-secao">Perfil do Usuário</h3>
+        <div id="perfilConteudo" class="perfil-card">
+            </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 GAME DO SABER - Colégio Estadual Roberto Langer Junior</p>
+        <p>&copy; 2026 GAME DO SABER - Colégio Estadual Roberto Langer Junior | Todos os direitos reservados.</p>
     </footer>
 
     <script>
         let codigoGerado = null;
         let emailParaReset = '';
 
-        // Recupera banco de dados local ou gera contas padrão (Incluindo CEO)
+        // Recupera banco de dados local ou gera contas padrão
         function obterUsuarios() {
             let u = localStorage.getItem('game_saber_users');
             if(!u) {
@@ -593,7 +732,7 @@
             return JSON.parse(u);
         }
 
-        // Alterna os formulários de autenticação
+        // Alterna formulários dentro da janela de login
         function mostrarFormAuth(formId) {
             document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
             const targetForm = document.getElementById(formId);
@@ -603,6 +742,27 @@
             btns.forEach(b => b.classList.remove('active'));
             if(formId === 'formLogin' && btns[0]) btns[0].classList.add('active');
             if(formId === 'formCadastro' && btns[1]) btns[1].classList.add('active');
+        }
+
+        function abrirModalAuth() {
+            document.getElementById('authOverlay').style.display = 'flex';
+        }
+
+        // Fecha a autenticação e entra como Convidado
+        function entrarComoConvidado() {
+            sessionStorage.removeItem('usuario_logado');
+            document.getElementById('authOverlay').style.display = 'none';
+            
+            document.getElementById('userInfoText').innerText = "Modo Convidado (Sem Login)";
+            const btn = document.getElementById('userBarBtn');
+            btn.innerText = "Fazer Login";
+            btn.className = "";
+            btn.onclick = abrirModalAuth;
+
+            document.getElementById('propNome').value = "";
+            document.getElementById('propTurma').value = "";
+            
+            atualizarAbaPerfil(null);
         }
 
         // Cadastra um novo usuário
@@ -645,16 +805,49 @@
             }
         }
 
-        // Libera a interface principal
+        // Libera a interface principal para usuário logado
         function iniciarSessao(userObj) {
             document.getElementById('authOverlay').style.display = 'none';
-            document.getElementById('userBar').style.display = 'flex';
-            document.getElementById('userNameDisplay').innerText = userObj.nome;
-            document.getElementById('userTurmaDisplay').innerText = userObj.turma;
+            
+            document.getElementById('userInfoText').innerHTML = `Bem-vindo(a), <strong>${userObj.nome}</strong> (${userObj.turma})`;
+            const btn = document.getElementById('userBarBtn');
+            btn.innerText = "Sair";
+            btn.className = "btn-logout";
+            btn.onclick = fazerLogout;
 
             // Preenchimento automático no formulário de envio
             document.getElementById('propNome').value = userObj.nome;
             document.getElementById('propTurma').value = userObj.turma;
+
+            atualizarAbaPerfil(userObj);
+        }
+
+        // Atualiza os dados na aba de Perfil
+        function atualizarAbaPerfil(userObj) {
+            const perfilDiv = document.getElementById('perfilConteudo');
+            if (userObj) {
+                const inicial = userObj.nome.charAt(0).toUpperCase();
+                perfilDiv.innerHTML = `
+                    <div class="perfil-avatar">${inicial}</div>
+                    <div class="perfil-info">
+                        <h4>${userObj.nome}</h4>
+                        <p>${userObj.email || ''}</p>
+                        <span class="perfil-badge">${userObj.turma}</span>
+                    </div>
+                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
+                    <p style="font-size: 0.95rem; color: #475569;">Você está conectado ao <strong>Game do Saber</strong>. Suas avaliações e ideias enviadas serão identificadas automaticamente.</p>
+                `;
+            } else {
+                perfilDiv.innerHTML = `
+                    <div class="perfil-avatar" style="background: #94a3b8;">?</div>
+                    <div class="perfil-info">
+                        <h4>Visitante Convidado</h4>
+                        <p>Você não está autenticado no momento.</p>
+                        <span class="perfil-badge" style="background:#f1f5f9; color:#475569;">Modo Leitura</span>
+                    </div>
+                    <button onclick="abrirModalAuth()" class="btn-auth" style="margin-top: 15px;">Fazer Login / Criar Conta</button>
+                `;
+            }
         }
 
         // Solicita código de redefinição de senha
@@ -710,7 +903,7 @@
         // Encerra a sessão do usuário
         function fazerLogout() {
             sessionStorage.removeItem('usuario_logado');
-            location.reload();
+            entrarComoConvidado();
         }
 
         // Troca de abas da página principal
@@ -723,11 +916,13 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Checagem inicial do estado de login
+        // Checagem inicial ao carregar
         window.addEventListener('DOMContentLoaded', () => {
             const logado = sessionStorage.getItem('usuario_logado');
             if (logado) {
                 iniciarSessao(JSON.parse(logado));
+            } else {
+                atualizarAbaPerfil(null);
             }
         });
     </script>
