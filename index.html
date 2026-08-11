@@ -571,7 +571,7 @@
         let codigoGerado = null;
         let emailParaReset = '';
 
-        // Recupera banco de dados local ou gera conta padrão
+        // Recupera banco de dados local ou gera contas padrão (Incluindo CEO)
         function obterUsuarios() {
             let u = localStorage.getItem('game_saber_users');
             if(!u) {
@@ -580,6 +580,11 @@
                         nome: 'Eduardo Miranda',
                         turma: 'Professor / Admin',
                         senha: '123'
+                    },
+                    'ceo@escola.pr.gov.br': {
+                        nome: 'CEO - Direção Geral',
+                        turma: 'Direção Executiva',
+                        senha: 'CEO@Game2026'
                     }
                 };
                 localStorage.setItem('game_saber_users', JSON.stringify(defaultUsers));
