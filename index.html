@@ -7,7 +7,7 @@
     
     <style>
         /* ==========================================
-           1. ESTILOS GERAIS E RESETS
+           1. ESTILOS BASE E RESETS
            ========================================== */
         * {
             margin: 0;
@@ -51,7 +51,7 @@
         }
 
         @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
+            from { transform: scale(0.92); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
@@ -70,6 +70,7 @@
         .auth-header p {
             font-size: 0.9rem;
             color: #00d2ff;
+            margin-top: 4px;
         }
 
         .auth-tabs {
@@ -85,7 +86,7 @@
             font-weight: bold;
             color: #64748b;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s;
         }
 
         .auth-tab-btn.active {
@@ -115,6 +116,7 @@
             border-radius: 8px;
             font-size: 0.95rem;
             outline: none;
+            transition: border-color 0.2s;
         }
 
         .auth-form input:focus {
@@ -123,7 +125,7 @@
 
         .btn-auth {
             background: #1b365d;
-            color: white;
+            color: #ffffff;
             border: none;
             padding: 12px;
             border-radius: 8px;
@@ -147,12 +149,12 @@
         }
 
         /* ==========================================
-           3. CABEÇALHO E BARRA DO USUÁRIO
+           3. PAINEL DE USUÁRIO E CABEÇALHO
            ========================================== */
         .user-bar {
             background: #0f172a;
-            color: #fff;
-            padding: 8px 20px;
+            color: #ffffff;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -161,12 +163,17 @@
 
         .user-bar button {
             background: #ef4444;
-            color: white;
+            color: #ffffff;
             border: none;
-            padding: 5px 12px;
-            border-radius: 4px;
+            padding: 6px 14px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .user-bar button:hover {
+            background: #dc2626;
         }
 
         header {
@@ -199,7 +206,7 @@
         }
 
         /* ==========================================
-           4. SISTEMA DE ABAS CONTEÚDO
+           4. ABAS DE NAVEGAÇÃO
            ========================================== */
         .tabs-nav {
             display: flex;
@@ -209,6 +216,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -252,7 +260,7 @@
         }
 
         /* ==========================================
-           5. GALERIA E IMAGENS
+           5. CARDS E GALERIAS
            ========================================== */
         .titulo-secao {
             text-align: center;
@@ -303,7 +311,7 @@
             padding: 12px;
             font-weight: bold;
             color: #444;
-            background-color: #fff;
+            background-color: #ffffff;
         }
 
         .grid-acoes {
@@ -378,19 +386,24 @@
             border-radius: 8px;
             font-size: 1rem;
             outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #1b365d;
         }
 
         .btn-submit {
             width: 100%;
             background-color: #1b365d;
-            color: white;
+            color: #ffffff;
             border: none;
             padding: 15px;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .btn-submit:hover {
@@ -439,14 +452,14 @@
                 </form>
 
                 <form id="formReset" class="auth-form" onsubmit="solicitarCodigoReset(event)">
-                    <p style="font-size:0.85rem; color:#64748b;">Digite seu e-mail para receber o código de redefinição.</p>
+                    <p style="font-size:0.85rem; color:#64748b;">Digite seu e-mail cadastrado para receber o código de verificação.</p>
                     <input type="email" id="resetEmail" placeholder="Seu E-mail cadastrado" required>
                     <button type="submit" class="btn-auth">Enviar Código</button>
                     <span class="link-esqueci" style="text-align:center;" onclick="mostrarFormAuth('formLogin')">Voltar ao Login</span>
                 </form>
 
                 <form id="formCodigoSenha" class="auth-form" onsubmit="redefinirSenhaComCodigo(event)">
-                    <p style="font-size:0.85rem; color:#10b981; font-weight:bold;">Código enviado! Verifique seu e-mail.</p>
+                    <p style="font-size:0.85rem; color:#10b981; font-weight:bold;">Código gerado com sucesso!</p>
                     <input type="text" id="inputCodigo" placeholder="Digite o Código de 6 dígitos" required>
                     <input type="password" id="novaSenhaInput" placeholder="Sua Nova Senha" required>
                     <button type="submit" class="btn-auth">Confirmar Nova Senha</button>
@@ -501,7 +514,7 @@
         </div>
         <div class="caixa-texto">
             <p>O cuidado com o patrimônio da escola é responsabilidade de todos os estudantes e funcionários. 
-            Os bens duráveis são importantes para o desenvolvimento dos estudantes e gera um ambiente melhor para todos os envolvidos.</p>
+            Os bens duráveis são importantes para o desenvolvimento dos estudantes e geram um ambiente melhor para todos os envolvidos.</p>
         </div>
     </section>
 
@@ -558,7 +571,7 @@
         let codigoGerado = null;
         let emailParaReset = '';
 
-        // Carrega contas salvas ou cria conta demo
+        // Recupera banco de dados local ou gera conta padrão
         function obterUsuarios() {
             let u = localStorage.getItem('game_saber_users');
             if(!u) {
@@ -575,10 +588,11 @@
             return JSON.parse(u);
         }
 
-        // Alterna entre formulários de login/cadastro/reset
+        // Alterna os formulários de autenticação
         function mostrarFormAuth(formId) {
             document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            document.getElementById(formId).classList.add('active');
+            const targetForm = document.getElementById(formId);
+            if(targetForm) targetForm.classList.add('active');
 
             const btns = document.querySelectorAll('.auth-tab-btn');
             btns.forEach(b => b.classList.remove('active'));
@@ -586,11 +600,11 @@
             if(formId === 'formCadastro' && btns[1]) btns[1].classList.add('active');
         }
 
-        // Realizar Cadastro
+        // Cadastra um novo usuário
         function cadastrarUsuario(e) {
             e.preventDefault();
-            const nome = document.getElementById('cadNome').value;
-            const turma = document.getElementById('cadTurma').value;
+            const nome = document.getElementById('cadNome').value.trim();
+            const turma = document.getElementById('cadTurma').value.trim();
             const email = document.getElementById('cadEmail').value.toLowerCase().trim();
             const senha = document.getElementById('cadSenha').value;
 
@@ -604,12 +618,12 @@
             usuarios[email] = { nome, turma, senha };
             localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
 
-            alert('Cadastro realizado com sucesso! Faça seu login.');
+            alert('Conta criada com sucesso! Faça seu login para continuar.');
             mostrarFormAuth('formLogin');
             document.getElementById('formCadastro').reset();
         }
 
-        // Realizar Login
+        // Realiza o login
         function fazerLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.toLowerCase().trim();
@@ -626,19 +640,19 @@
             }
         }
 
-        // Inicia sessão no site
+        // Libera a interface principal
         function iniciarSessao(userObj) {
             document.getElementById('authOverlay').style.display = 'none';
             document.getElementById('userBar').style.display = 'flex';
             document.getElementById('userNameDisplay').innerText = userObj.nome;
             document.getElementById('userTurmaDisplay').innerText = userObj.turma;
 
-            // Preenche automaticamente o form de proposta
+            // Preenchimento automático no formulário de envio
             document.getElementById('propNome').value = userObj.nome;
             document.getElementById('propTurma').value = userObj.turma;
         }
 
-        // Solicitar código para redefinir senha
+        // Solicita código de redefinição de senha
         function solicitarCodigoReset(e) {
             e.preventDefault();
             emailParaReset = document.getElementById('resetEmail').value.toLowerCase().trim();
@@ -652,30 +666,29 @@
             // Gera código aleatório de 6 dígitos
             codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
 
-            // Envia aviso ao e-mail responsável via FormSubmit (Silencioso)
+            // Dispara requisição assíncrona para notificação de e-mail
             fetch('https://formsubmit.co/ajax/eduardo.miranda.carlos@escola.pr.gov.br', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    _subject: "Código de Redefinição de Senha - Game do Saber",
+                    _subject: "Código de Redefinição - Game do Saber",
                     emailSolicitante: emailParaReset,
                     codigoVerificacao: codigoGerado
                 })
-            });
+            }).catch(() => {});
 
-            // Exibe o código na tela para validação e testes
-            alert(`Solicitação enviada!\n\nSeu código de verificação é: ${codigoGerado}`);
+            alert(`Código enviado com sucesso!\n\nSeu código de verificação para testes é: ${codigoGerado}`);
             mostrarFormAuth('formCodigoSenha');
         }
 
-        // Redefinir senha com o código
+        // Processa e altera a nova senha
         function redefinirSenhaComCodigo(e) {
             e.preventDefault();
             const codDigitado = document.getElementById('inputCodigo').value.trim();
             const novaSenha = document.getElementById('novaSenhaInput').value;
 
             if (codDigitado !== codigoGerado) {
-                alert('Código incorreto! Verifique o código recebido.');
+                alert('Código incorreto! Digite o código de 6 dígitos corretamente.');
                 return;
             }
 
@@ -683,37 +696,35 @@
             usuarios[emailParaReset].senha = novaSenha;
             localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
 
-            alert('Senha alterada com sucesso! Entre com sua nova senha.');
+            alert('Senha alterada com sucesso! Entre agora utilizando sua nova senha.');
             document.getElementById('formReset').reset();
             document.getElementById('formCodigoSenha').reset();
             mostrarFormAuth('formLogin');
         }
 
-        // Logout
+        // Encerra a sessão do usuário
         function fazerLogout() {
             sessionStorage.removeItem('usuario_logado');
             location.reload();
         }
 
-        // Navegação entre as abas do site
+        // Troca de abas da página principal
         function trocarAba(event, idAba) {
-            const abas = document.querySelectorAll('.tab-content');
-            abas.forEach(aba => aba.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(aba => aba.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-            const botoes = document.querySelectorAll('.tab-btn');
-            botoes.forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(idAba).classList.add('active');
+            const targetAba = document.getElementById(idAba);
+            if(targetAba) targetAba.classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        // Checa se já está logado ao abrir a página
-        window.onload = function() {
+        // Checagem inicial do estado de login
+        window.addEventListener('DOMContentLoaded', () => {
             const logado = sessionStorage.getItem('usuario_logado');
             if (logado) {
                 iniciarSessao(JSON.parse(logado));
             }
-        };
+        });
     </script>
 </body>
 </html>
