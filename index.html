@@ -20,10 +20,103 @@
             background-color: #f4f6f9;
             color: #2c3e50;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* ==========================================
-           2. ANIMAÇÃO DE LÂMPADAS PISCANDO (ABERTURA)
+           1.1 TELA DE INÍCIO INTERATIVA (SPLASH SCREEN)
+           ========================================== */
+        .splash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0f1d 0%, #1b365d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .splash-content {
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .splash-lamp-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .splash-lamp-icon {
+            font-size: 6rem;
+            filter: brightness(0.3) grayscale(0.6);
+            transition: transform 0.4s ease, filter 0.4s ease;
+            user-select: none;
+            display: inline-block;
+        }
+
+        /* Lâmpada ligada ao clicar em Começar */
+        .splash-lamp-icon.ligada {
+            filter: drop-shadow(0 0 35px #fbbf24) drop-shadow(0 0 70px #f59e0b) brightness(1.4) grayscale(0);
+            transform: scale(1.25);
+            animation: pulsoBrilho 0.8s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulsoBrilho {
+            0% { transform: scale(1.2); filter: drop-shadow(0 0 25px #fbbf24) brightness(1.2); }
+            100% { transform: scale(1.3); filter: drop-shadow(0 0 50px #f59e0b) brightness(1.5); }
+        }
+
+        .splash-title {
+            color: #ffffff;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            font-weight: 800;
+        }
+
+        .splash-subtitle {
+            color: #00d2ff;
+            font-size: 1.05rem;
+            margin-top: -10px;
+        }
+
+        .btn-comecar {
+            background: linear-gradient(135deg, #00d2ff, #0284c7);
+            color: #0f172a;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-comecar:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.5);
+            background: linear-gradient(135deg, #38bdf8, #00d2ff);
+        }
+
+        .btn-comecar:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* ==========================================
+           2. ANIMAÇÃO DE LÂMPADAS PISCANDO
            ========================================== */
         @keyframes piscarLuz {
             0%, 100% {
@@ -31,26 +124,10 @@
                 filter: drop-shadow(0 0 15px #f59e0b) drop-shadow(0 0 25px #fbbf24);
                 transform: scale(1.1);
             }
-            20% {
-                opacity: 0.3;
-                filter: none;
-                transform: scale(0.95);
-            }
-            25% {
-                opacity: 1;
-                filter: drop-shadow(0 0 20px #fbbf24);
-                transform: scale(1.15);
-            }
-            55% {
-                opacity: 0.4;
-                filter: none;
-                transform: scale(0.98);
-            }
-            60% {
-                opacity: 1;
-                filter: drop-shadow(0 0 15px #f59e0b);
-                transform: scale(1.05);
-            }
+            20% { opacity: 0.3; filter: none; transform: scale(0.95); }
+            25% { opacity: 1; filter: drop-shadow(0 0 20px #fbbf24); transform: scale(1.15); }
+            55% { opacity: 0.4; filter: none; transform: scale(0.98); }
+            60% { opacity: 1; filter: drop-shadow(0 0 15px #f59e0b); transform: scale(1.05); }
         }
 
         .lampada-pisca {
@@ -79,9 +156,7 @@
             padding: 20px;
         }
 
-        .auth-overlay.active {
-            display: flex;
-        }
+        .auth-overlay.active { display: flex; }
 
         .auth-card {
             background: #ffffff;
@@ -115,10 +190,7 @@
             transition: 0.2s;
         }
 
-        .btn-fechar-modal:hover {
-            background: #ef4444;
-            color: #fff;
-        }
+        .btn-fechar-modal:hover { background: #ef4444; color: #fff; }
 
         .auth-header {
             background: linear-gradient(135deg, #1b365d, #2c5364);
@@ -127,19 +199,10 @@
             text-align: center;
         }
 
-        .auth-header h2 {
-            font-size: 1.6rem;
-        }
+        .auth-header h2 { font-size: 1.6rem; }
+        .auth-header p { font-size: 0.85rem; color: #00d2ff; }
 
-        .auth-header p {
-            font-size: 0.85rem;
-            color: #00d2ff;
-        }
-
-        .auth-tabs {
-            display: flex;
-            background: #e2e8f0;
-        }
+        .auth-tabs { display: flex; background: #e2e8f0; }
 
         .auth-tab-btn {
             flex: 1;
@@ -158,9 +221,7 @@
             border-bottom: 3px solid #00d2ff;
         }
 
-        .auth-body {
-            padding: 25px;
-        }
+        .auth-body { padding: 25px; }
 
         .auth-form {
             display: none;
@@ -168,9 +229,7 @@
             gap: 12px;
         }
 
-        .auth-form.active {
-            display: flex;
-        }
+        .auth-form.active { display: flex; }
 
         .auth-form input {
             width: 100%;
@@ -181,9 +240,7 @@
             outline: none;
         }
 
-        .auth-form input:focus {
-            border-color: #1b365d;
-        }
+        .auth-form input:focus { border-color: #1b365d; }
 
         .btn-auth {
             background: #1b365d;
@@ -235,18 +292,14 @@
             transition: 0.2s;
         }
 
-        .user-bar button:hover {
-            background: #38bdf8;
-        }
+        .user-bar button:hover { background: #38bdf8; }
 
         .user-bar button.btn-logout {
             background: #ef4444;
             color: #ffffff;
         }
 
-        .user-bar button.btn-logout:hover {
-            background: #dc2626;
-        }
+        .user-bar button.btn-logout:hover { background: #dc2626; }
 
         header {
             background: linear-gradient(135deg, #1b365d 0%, #2c5364 100%);
@@ -320,9 +373,7 @@
             animation: surgir 0.4s ease-in-out;
         }
 
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content.active { display: block; }
 
         @keyframes surgir {
             from { opacity: 0; transform: translateY(10px); }
@@ -553,6 +604,17 @@
 </head>
 <body>
 
+    <div id="splashScreen" class="splash-overlay">
+        <div class="splash-content">
+            <div class="splash-lamp-wrapper">
+                <span id="splashLamp" class="splash-lamp-icon">💡</span>
+            </div>
+            <h1 class="splash-title">GAME DO SABER</h1>
+            <p class="splash-subtitle">Colégio Estadual Roberto Langer Junior</p>
+            <button id="btnComecar" class="btn-comecar" onclick="iniciarSite()">Começar</button>
+        </div>
+    </div>
+
     <div id="authOverlay" class="auth-overlay">
         <div class="auth-card">
             <button class="btn-fechar-modal" onclick="fecharModalAuth()">&times;</button>
@@ -713,6 +775,31 @@
     <script>
         let codigoGerado = null;
         let emailParaReset = '';
+
+        // FUNÇÃO DE ABERTURA DO SITE (TELA DE INÍCIO)
+        function iniciarSite() {
+            const lamp = document.getElementById('splashLamp');
+            const splash = document.getElementById('splashScreen');
+            const btn = document.getElementById('btnComecar');
+
+            if(btn) btn.style.pointerEvents = 'none';
+
+            // 1. Acende a Lâmpada
+            if (lamp) {
+                lamp.classList.add('ligada');
+            }
+
+            // 2. Transição para desaparecer e liberar o site
+            setTimeout(() => {
+                if (splash) {
+                    splash.style.opacity = '0';
+                    splash.style.visibility = 'hidden';
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                    }, 600);
+                }
+            }, 800);
+        }
 
         // Banco de dados local seguro com Try/Catch
         function obterUsuarios() {
