@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAME DO SABER - Colégio Estadual Roberto Langer Junior</title>
     
+    <script>
+        // FUNÇÃO DE TRATAMENTO DE IMAGENS (DECLARADA NO TOPO PARA EVITAR ERROS)
+        function tratarErroImagem(imgElement, titulo) {
+            if (!imgElement || imgElement.dataset.errorHandled) return;
+            imgElement.dataset.errorHandled = "true";
+
+            const container = imgElement.parentElement;
+            const div = document.createElement('div');
+            div.className = 'img-fallback';
+            div.innerHTML = `<span style="font-size:2.5rem;">🖼️</span><span>${titulo}</span>`;
+            
+            if (container) {
+                imgElement.style.display = 'none';
+                container.appendChild(div);
+            }
+        }
+    </script>
+
     <style>
         /* ==========================================
            1. ESTILOS BASE E RESETS
@@ -43,9 +61,9 @@
             overflow: hidden;
         }
 
-        /* Efeito de saída deslizando para cima */
+        /* Efeito de descida/revelação do site ao clicar em Entrar */
         .splash-overlay.revelar-site {
-            transform: translateY(-100%);
+            transform: translateY(100%);
             opacity: 0;
         }
 
@@ -68,7 +86,7 @@
 
         .splash-lamp-icon {
             font-size: 6.5rem;
-            filter: brightness(0.4) grayscale(0.5);
+            filter: brightness(0.5) drop-shadow(0 0 10px rgba(251, 191, 36, 0.3));
             transition: transform 0.3s ease, filter 0.3s ease;
             display: inline-block;
         }
@@ -94,25 +112,25 @@
             }
         }
 
-        /* Partículas: Lâmpadas menores que explodem */
+        /* Partículas: Lâmpadas menores que explodem do centro */
         .lamp-particle {
             position: absolute;
-            top: 40%;
+            top: 50%;
             left: 50%;
-            font-size: 1.8rem;
+            font-size: 2rem;
             pointer-events: none;
-            z-index: 10;
+            z-index: 100;
             animation: explodirParticula 0.8s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
         }
 
         @keyframes explodirParticula {
             0% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+                transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
             }
             100% {
                 opacity: 0;
-                transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.4) rotate(var(--rot));
+                transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.3) rotate(var(--rot));
             }
         }
 
@@ -149,10 +167,6 @@
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 15px 30px rgba(0, 210, 255, 0.5);
             background: linear-gradient(135deg, #38bdf8, #00d2ff);
-        }
-
-        .btn-comecar:active {
-            transform: translateY(1px) scale(0.98);
         }
 
         /* ==========================================
@@ -206,12 +220,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             overflow: hidden;
             position: relative;
-            animation: popIn 0.3s ease;
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
         }
 
         .btn-fechar-modal {
@@ -227,10 +235,7 @@
             border-radius: 50%;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
         }
-
-        .btn-fechar-modal:hover { background: #ef4444; color: #fff; }
 
         .auth-header {
             background: linear-gradient(135deg, #1b365d, #2c5364);
@@ -239,7 +244,6 @@
             text-align: center;
         }
 
-        .auth-header h2 { font-size: 1.6rem; }
         .auth-header p { font-size: 0.85rem; color: #00d2ff; }
 
         .auth-tabs { display: flex; background: #e2e8f0; }
@@ -252,7 +256,6 @@
             font-weight: bold;
             color: #64748b;
             cursor: pointer;
-            transition: 0.3s;
         }
 
         .auth-tab-btn.active {
@@ -280,8 +283,6 @@
             outline: none;
         }
 
-        .auth-form input:focus { border-color: #1b365d; }
-
         .btn-auth {
             background: #1b365d;
             color: #ffffff;
@@ -291,13 +292,7 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
             margin-top: 5px;
-        }
-
-        .btn-auth:hover {
-            background: #00d2ff;
-            color: #1b365d;
         }
 
         .link-esqueci {
@@ -329,17 +324,9 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
         }
 
-        .user-bar button:hover { background: #38bdf8; }
-
-        .user-bar button.btn-logout {
-            background: #ef4444;
-            color: #ffffff;
-        }
-
-        .user-bar button.btn-logout:hover { background: #dc2626; }
+        .user-bar button.btn-logout { background: #ef4444; color: #ffffff; }
 
         header {
             background: linear-gradient(135deg, #1b365d 0%, #2c5364 100%);
@@ -349,24 +336,8 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        header h2 {
-            font-size: 1.2rem;
-            color: #00d2ff;
-            margin-top: 5px;
-        }
-
-        header p {
-            font-size: 0.95rem;
-            color: #e0e0e0;
-            margin-top: 5px;
-            letter-spacing: 1px;
-        }
+        header h1 { font-size: 2.5rem; letter-spacing: 1px; text-transform: uppercase; }
+        header h2 { font-size: 1.2rem; color: #00d2ff; margin-top: 5px; }
 
         /* ==========================================
            5. ABAS DE NAVEGAÇÃO
@@ -390,13 +361,7 @@
             font-weight: bold;
             color: #555;
             cursor: pointer;
-            transition: all 0.3s;
             border-bottom: 4px solid transparent;
-        }
-
-        .tab-btn:hover {
-            color: #1b365d;
-            background-color: #f8f9fa;
         }
 
         .tab-btn.active {
@@ -410,15 +375,9 @@
             max-width: 1100px;
             margin: 0 auto;
             padding: 35px 20px;
-            animation: surgir 0.4s ease-in-out;
         }
 
         .tab-content.active { display: block; }
-
-        @keyframes surgir {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
 
         /* ==========================================
            6. CARDS, GALERIA E LAYOUTS
@@ -428,17 +387,6 @@
             font-size: 1.8rem;
             color: #1b365d;
             margin-bottom: 25px;
-            position: relative;
-        }
-
-        .titulo-secao::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background: #00d2ff;
-            margin: 8px auto 0 auto;
-            border-radius: 2px;
         }
 
         .galeria-flex {
@@ -455,7 +403,6 @@
             overflow: hidden;
             box-shadow: 0 6px 15px rgba(0,0,0,0.08);
             text-align: center;
-            transition: transform 0.3s;
             max-width: 450px;
             width: 100%;
             min-height: 250px;
@@ -463,8 +410,6 @@
             flex-direction: column;
             justify-content: space-between;
         }
-
-        .card-foto:hover { transform: translateY(-5px); }
 
         .card-foto img {
             width: 100%;
@@ -478,7 +423,6 @@
             padding: 14px;
             font-weight: bold;
             color: #1b365d;
-            background: #ffffff;
         }
 
         .grid-acoes {
@@ -492,10 +436,7 @@
             width: 100%;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
         }
-
-        .grid-acoes img:hover { transform: scale(1.03); }
 
         .caixa-texto {
             background: #ffffff;
@@ -509,7 +450,7 @@
             border-left: 5px solid #1b365d;
         }
 
-        /* Placeholder elegante para imagens que não carregarem */
+        /* Container visual para imagens com falha de carregamento */
         .img-fallback {
             width: 100%;
             height: 220px;
@@ -523,10 +464,11 @@
             padding: 20px;
             text-align: center;
             gap: 10px;
+            border-radius: 8px;
         }
 
         /* ==========================================
-           7. FORMULÁRIO E CARD DE AGRADECIMENTO
+           7. FORMULÁRIO E AVALIAÇÃO
            ========================================== */
         .form-box {
             background: #ffffff;
@@ -551,7 +493,6 @@
             font-size: 2.2rem;
             color: #cccccc;
             cursor: pointer;
-            transition: color 0.2s;
         }
 
         .rating-stars input:checked ~ label,
@@ -571,10 +512,6 @@
             outline: none;
         }
 
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: #1b365d;
-        }
-
         .btn-submit {
             width: 100%;
             background-color: #1b365d;
@@ -585,12 +522,6 @@
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-submit:hover {
-            background-color: #00d2ff;
-            color: #1b365d;
         }
 
         .card-agradecimento {
@@ -600,33 +531,18 @@
             padding: 35px 25px;
             text-align: center;
             margin-top: 35px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        .card-agradecimento h3 {
-            font-size: 2rem;
-            color: #00d2ff;
-            margin-bottom: 10px;
-        }
+        .card-agradecimento h3 { font-size: 2rem; color: #00d2ff; margin-bottom: 10px; }
 
-        .card-agradecimento p {
-            font-size: 1.05rem;
-            color: #e2e8f0;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* ==========================================
-           8. ABA DE PERFIL
-           ========================================== */
         .perfil-card {
             background: #ffffff;
             max-width: 550px;
             margin: 0 auto;
             border-radius: 16px;
             padding: 35px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
         .perfil-avatar {
@@ -641,7 +557,6 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px auto;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .perfil-badge {
@@ -838,21 +753,13 @@
     <script>
         let codigoGerado = null;
         let emailParaReset = '';
+        let inicioExecutado = false;
 
-        // FUNÇÃO DE TRATAMENTO DE IMAGENS QUE NÃO CARREGAM
-        function tratarErroImagem(imgElement, titulo) {
-            const container = imgElement.parentElement;
-            const div = document.createElement('div');
-            div.className = 'img-fallback';
-            div.innerHTML = `<span style="font-size:2.5rem;">🖼️</span><span>${titulo}</span>`;
-            if (container) {
-                imgElement.style.display = 'none';
-                container.insertBefore(div, imgElement);
-            }
-        }
-
-        // FUNÇÃO DE ABERTURA DO SITE (ANIMAÇÃO DE EXPLOSÃO)
+        // FUNÇÃO DE ABERTURA DO SITE COM ANIMAÇÃO
         function iniciarSite() {
+            if (inicioExecutado) return;
+            inicioExecutado = true;
+
             const lamp = document.getElementById('splashLamp');
             const splash = document.getElementById('splashScreen');
             const btn = document.getElementById('btnComecar');
@@ -884,7 +791,7 @@
             const splash = document.getElementById('splashScreen');
             if (!splash) return;
 
-            const quantidade = 35; // Quantidade de lâmpadas da explosão
+            const quantidade = 40; // Quantidade de lâmpadas da explosão
             for (let i = 0; i < quantidade; i++) {
                 const particle = document.createElement('span');
                 particle.classList.add('lamp-particle');
@@ -892,7 +799,7 @@
 
                 // Cálculo de direção e velocidade randômica em 360 graus
                 const angulo = Math.random() * Math.PI * 2;
-                const distancia = 180 + Math.random() * 400; // Distância do raio
+                const distancia = 200 + Math.random() * 450;
                 const dx = (Math.cos(angulo) * distancia) + 'px';
                 const dy = (Math.sin(angulo) * distancia) + 'px';
                 const rot = (Math.random() * 720 - 360) + 'deg';
@@ -905,7 +812,7 @@
             }
         }
 
-        // Banco de dados local seguro com Try/Catch
+        // BANCO DE DADOS LOCAL E SESSÃO
         function obterUsuarios() {
             try {
                 let u = localStorage.getItem('game_saber_users');
@@ -927,7 +834,6 @@
                 }
                 return JSON.parse(u);
             } catch(e) {
-                console.warn('LocalStorage indisponível, usando dados temporários.');
                 return {
                     'ceo@escola.pr.gov.br': { nome: 'CEO - Direção Geral', turma: 'Direção Executiva', senha: 'CEO@Game2026' }
                 };
@@ -1034,7 +940,7 @@
                         <span class="perfil-badge">${userObj.turma}</span>
                     </div>
                     <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                    <p style="font-size: 0.95rem; color: #475569;">Sua conta está ativa no <strong>Game do Saber</strong>. Suas avaliações e sugestões serão registradas em seu nome.</p>
+                    <p style="font-size: 0.95rem; color: #475569;">Sua conta está ativa no <strong>Game do Saber</strong>.</p>
                     <button onclick="fazerLogout()" class="btn-auth" style="background:#ef4444; margin-top:20px;">Sair da Conta</button>
                 `;
             } else {
@@ -1046,7 +952,7 @@
                         <span class="perfil-badge" style="background:#f1f5f9; color:#475569;">Modo Leitura</span>
                     </div>
                     <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                    <p style="font-size: 0.95rem; color: #475569;">Faça login para salvar suas informações e enviar propostas identificadas!</p>
+                    <p style="font-size: 0.95rem; color: #475569;">Faça login para salvar suas informações!</p>
                     <button onclick="abrirModalAuth()" class="btn-auth" style="margin-top: 15px;">Fazer Login / Cadastrar</button>
                 `;
             }
@@ -1095,10 +1001,8 @@
             } catch(err){}
 
             alert('Senha alterada com sucesso!');
-            const formR = document.getElementById('formReset');
-            const formC = document.getElementById('formCodigoSenha');
-            if(formR) formR.reset();
-            if(formC) formC.reset();
+            document.getElementById('formReset').reset();
+            document.getElementById('formCodigoSenha').reset();
             mostrarFormAuth('formLogin');
         }
 
