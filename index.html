@@ -636,7 +636,7 @@
         <h3 class="titulo-secao">O Cuidado com o Patrimônio</h3>
         <div class="galeria-flex">
             <figure class="card-foto">
-                <img src="sala de aula.jpeg" alt="Sala de Aula">
+                <img src="sala-de-aula.jpeg" alt="Sala de Aula">
                 <figcaption>Nossa Sala de Aula</figcaption>
             </figure>
             <figure class="card-foto">
@@ -714,26 +714,33 @@
         let codigoGerado = null;
         let emailParaReset = '';
 
-        // Banco de dados local
+        // Banco de dados local seguro com Try/Catch
         function obterUsuarios() {
-            let u = localStorage.getItem('game_saber_users');
-            if(!u) {
-                let defaultUsers = {
-                    'eduardo.miranda.carlos@escola.pr.gov.br': {
-                        nome: 'Eduardo Miranda',
-                        turma: 'Professor / Admin',
-                        senha: '123'
-                    },
-                    'ceo@escola.pr.gov.br': {
-                        nome: 'CEO - Direção Geral',
-                        turma: 'Direção Executiva',
-                        senha: 'CEO@Game2026'
-                    }
+            try {
+                let u = localStorage.getItem('game_saber_users');
+                if(!u) {
+                    let defaultUsers = {
+                        'eduardo.miranda.carlos@escola.pr.gov.br': {
+                            nome: 'Eduardo Miranda',
+                            turma: 'Professor / Admin',
+                            senha: '123'
+                        },
+                        'ceo@escola.pr.gov.br': {
+                            nome: 'CEO - Direção Geral',
+                            turma: 'Direção Executiva',
+                            senha: 'CEO@Game2026'
+                        }
+                    };
+                    localStorage.setItem('game_saber_users', JSON.stringify(defaultUsers));
+                    return defaultUsers;
+                }
+                return JSON.parse(u);
+            } catch(e) {
+                console.warn('LocalStorage indisponível, usando dados temporários.');
+                return {
+                    'ceo@escola.pr.gov.br': { nome: 'CEO - Direção Geral', turma: 'Direção Executiva', senha: 'CEO@Game2026' }
                 };
-                localStorage.setItem('game_saber_users', JSON.stringify(defaultUsers));
-                return defaultUsers;
             }
-            return JSON.parse(u);
         }
 
         function mostrarFormAuth(formId) {
@@ -748,11 +755,13 @@
         }
 
         function abrirModalAuth() {
-            document.getElementById('authOverlay').classList.add('active');
+            const overlay = document.getElementById('authOverlay');
+            if(overlay) overlay.classList.add('active');
         }
 
         function fecharModalAuth() {
-            document.getElementById('authOverlay').classList.remove('active');
+            const overlay = document.getElementById('authOverlay');
+            if(overlay) overlay.classList.remove('active');
         }
 
         function cadastrarUsuario(e) {
@@ -770,7 +779,9 @@
             }
 
             usuarios[email] = { nome, turma, senha };
-            localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
+            try {
+                localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
+            } catch(err){}
 
             alert('Conta criada com sucesso! Faça seu login para continuar.');
             mostrarFormAuth('formLogin');
@@ -786,7 +797,9 @@
 
             if (usuarios[email] && usuarios[email].senha === senha) {
                 const userObj = usuarios[email];
-                sessionStorage.setItem('usuario_logado', JSON.stringify({ email, ...userObj }));
+                try {
+                    sessionStorage.setItem('usuario_logado', JSON.stringify({ email, ...userObj }));
+                } catch(err){}
                 iniciarSessao({ email, ...userObj });
             } else {
                 alert('E-mail ou senha incorretos!');
@@ -796,11 +809,17 @@
         function iniciarSessao(userObj) {
             fecharModalAuth();
             
-            document.getElementById('userInfoText').innerHTML = `Bem-vindo(a), <strong>${userObj.nome}</strong> (${userObj.turma})`;
+            const userInfoText = document.getElementById('userInfoText');
+            if(userInfoText) {
+                userInfoText.innerHTML = `Bem-vindo(a), <strong>${userObj.nome}</strong> (${userObj.turma})`;
+            }
+
             const btn = document.getElementById('userBarBtn');
-            btn.innerText = "Sair";
-            btn.className = "btn-logout";
-            btn.onclick = fazerLogout;
+            if(btn) {
+                btn.innerText = "Sair";
+                btn.className = "btn-logout";
+                btn.onclick = fazerLogout;
+            }
 
             const elNome = document.getElementById('propNome');
             const elTurma = document.getElementById('propTurma');
@@ -880,7 +899,9 @@
 
             let usuarios = obterUsuarios();
             usuarios[emailParaReset].senha = novaSenha;
-            localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
+            try {
+                localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
+            } catch(err){}
 
             alert('Senha alterada com sucesso!');
             document.getElementById('formReset').reset();
@@ -889,12 +910,19 @@
         }
 
         function fazerLogout() {
-            sessionStorage.removeItem('usuario_logado');
-            document.getElementById('userInfoText').innerText = "Modo Convidado (Navegação Livre)";
+            try {
+                sessionStorage.removeItem('usuario_logado');
+            } catch(err){}
+            
+            const userInfoText = document.getElementById('userInfoText');
+            if(userInfoText) userInfoText.innerText = "Modo Convidado (Navegação Livre)";
+            
             const btn = document.getElementById('userBarBtn');
-            btn.innerText = "Fazer Login";
-            btn.className = "";
-            btn.onclick = abrirModalAuth;
+            if(btn) {
+                btn.innerText = "Fazer Login";
+                btn.className = "";
+                btn.onclick = abrirModalAuth;
+            }
 
             const elNome = document.getElementById('propNome');
             const elTurma = document.getElementById('propTurma');
@@ -910,11 +938,17 @@
 
             const target = document.getElementById(idAba);
             if(target) target.classList.add('active');
-            event.currentTarget.classList.add('active');
+            if(event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const logado = sessionStorage.getItem('usuario_logado');
+            let logado = null;
+            try {
+                logado = sessionStorage.getItem('usuario_logado');
+            } catch(err){}
+
             if (logado) {
                 iniciarSessao(JSON.parse(logado));
             } else {
