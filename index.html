@@ -62,7 +62,7 @@
         }
 
         /* ==========================================
-           3. OVERLAY DE LOGIN (OCULTO POR PADRÃO)
+           3. OVERLAY DE LOGIN (OPCIONAL)
            ========================================== */
         .auth-overlay {
             position: fixed;
@@ -72,7 +72,7 @@
             height: 100vh;
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(6px);
-            display: none; /* Escondido por padrão para não obrigar login */
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
@@ -479,7 +479,6 @@
             color: #1b365d;
         }
 
-        /* Card Agradecimento */
         .card-agradecimento {
             background: linear-gradient(135deg, #0f172a, #1b365d);
             color: #ffffff;
@@ -641,8 +640,8 @@
                 <figcaption>Nossa Sala de Aula</figcaption>
             </figure>
             <figure class="card-foto">
-                <img src="days.jpeg" alt="Antes e Depois Ventilador">
-                <figcaption><b>Antes e Depois - "Ventilador"</b></figcaption>
+                <img src="days.jpeg" alt="Antes e Depois - Preservação do Patrimônio Escolar">
+                <figcaption><b>Antes e Depois - Preservação do Patrimônio Escolar</b></figcaption>
             </figure>
         </div>
         <div class="caixa-texto">
@@ -737,7 +736,6 @@
             return JSON.parse(u);
         }
 
-        // Alternar abas do modal
         function mostrarFormAuth(formId) {
             document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
             const target = document.getElementById(formId);
@@ -757,7 +755,6 @@
             document.getElementById('authOverlay').classList.remove('active');
         }
 
-        // Cadastrar
         function cadastrarUsuario(e) {
             e.preventDefault();
             const nome = document.getElementById('cadNome').value.trim();
@@ -780,7 +777,6 @@
             document.getElementById('formCadastro').reset();
         }
 
-        // Login
         function fazerLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.toLowerCase().trim();
@@ -797,7 +793,6 @@
             }
         }
 
-        // Sessão do Usuário
         function iniciarSessao(userObj) {
             fecharModalAuth();
             
@@ -807,7 +802,6 @@
             btn.className = "btn-logout";
             btn.onclick = fazerLogout;
 
-            // Preenche o formulário se disponível
             const elNome = document.getElementById('propNome');
             const elTurma = document.getElementById('propTurma');
             if(elNome) elNome.value = userObj.nome;
@@ -816,7 +810,6 @@
             atualizarAbaPerfil(userObj);
         }
 
-        // Renderiza a Aba de Perfil
         function atualizarAbaPerfil(userObj) {
             const perfilDiv = document.getElementById('perfilConteudo');
             if(!perfilDiv) return;
@@ -849,7 +842,6 @@
             }
         }
 
-        // Reset de Senha
         function solicitarCodigoReset(e) {
             e.preventDefault();
             emailParaReset = document.getElementById('resetEmail').value.toLowerCase().trim();
@@ -896,7 +888,6 @@
             mostrarFormAuth('formLogin');
         }
 
-        // Logout
         function fazerLogout() {
             sessionStorage.removeItem('usuario_logado');
             document.getElementById('userInfoText').innerText = "Modo Convidado (Navegação Livre)";
@@ -913,7 +904,6 @@
             atualizarAbaPerfil(null);
         }
 
-        // Navegação de Abas
         function trocarAba(event, idAba) {
             document.querySelectorAll('.tab-content').forEach(aba => aba.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -923,7 +913,6 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Execução Inicial
         window.addEventListener('DOMContentLoaded', () => {
             const logado = sessionStorage.getItem('usuario_logado');
             if (logado) {
