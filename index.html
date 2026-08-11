@@ -92,7 +92,7 @@
 
         /* Conteúdo das Abas */
         .tab-content {
-            display: none; /* Escondido por padrão */
+            display: none;
             max-width: 1100px;
             margin: 0 auto;
             padding: 40px 20px;
@@ -100,7 +100,7 @@
         }
 
         .tab-content.active {
-            display: block; /* Exibe apenas a aba ativa */
+            display: block;
         }
 
         @keyframes surgir {
@@ -165,7 +165,6 @@
             background-color: #fff;
         }
 
-        /* Grade para as imagens numeradas 1 a 6 */
         .grid-acoes {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -197,7 +196,7 @@
         }
 
         /* ==========================================
-           5. SISTEMA DE AVALIAÇÃO E PROPOSTAS
+           5. FORMULÁRIO DE AVALIAÇÃO E PROPOSTAS
            ========================================== */
         .form-box {
             background: #ffffff;
@@ -208,7 +207,6 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
-        /* Estrelas interativas */
         .rating-stars {
             display: flex;
             flex-direction: row-reverse;
@@ -266,22 +264,6 @@
         .btn-submit:hover {
             background-color: #00d2ff;
             color: #1b365d;
-        }
-
-        /* Lista de propostas enviadas na sessão */
-        .propostas-lista {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .card-proposta {
-            background: #f8f9fa;
-            border-left: 4px solid #ffb400;
-            padding: 15px;
-            border-radius: 6px;
-            text-align: left;
         }
 
         footer {
@@ -361,31 +343,33 @@
     <section id="aba-propostas" class="tab-content">
         <div class="form-box">
             <h3 class="titulo-secao">Deixe sua Avaliação e Proposta</h3>
-            <p style="text-align: center; color: #666; margin-bottom: 15px;">Dê sua nota para a escola e envie ideias de como podemos melhorar!</p>
+            <p style="text-align: center; color: #666; margin-bottom: 15px;">Dê sua nota para a escola e envie ideias diretamente para a nossa equipe!</p>
             
-            <form id="formProposta" onsubmit="adicionarProposta(event)">
+            <form action="https://formsubmit.co/eduardo.miranda.carlos@escola.pr.gov.br" method="POST">
+                
+                <input type="hidden" name="_subject" value="Nova Proposta - Game do Saber">
+                <input type="hidden" name="_captcha" value="false">
+
                 <div class="rating-stars">
-                    <input type="radio" id="st5" name="estrelas" value="5" required><label for="st5">★</label>
-                    <input type="radio" id="st4" name="estrelas" value="4"><label for="st4">★</label>
-                    <input type="radio" id="st3" name="estrelas" value="3"><label for="st3">★</label>
-                    <input type="radio" id="st2" name="estrelas" value="2"><label for="st2">★</label>
-                    <input type="radio" id="st1" name="estrelas" value="1"><label for="st1">★</label>
+                    <input type="radio" id="st5" name="Avaliação" value="5 Estrelas" required><label for="st5">★</label>
+                    <input type="radio" id="st4" name="Avaliação" value="4 Estrelas"><label for="st4">★</label>
+                    <input type="radio" id="st3" name="Avaliação" value="3 Estrelas"><label for="st3">★</label>
+                    <input type="radio" id="st2" name="Avaliação" value="2 Estrelas"><label for="st2">★</label>
+                    <input type="radio" id="st1" name="Avaliação" value="1 Estrela"><label for="st1">★</label>
                 </div>
 
                 <div class="form-group">
-                    <input type="text" id="nomeUser" placeholder="Seu Nome (Opcional)">
+                    <input type="text" name="Nome do Aluno" placeholder="Seu Nome (Opcional)">
                 </div>
                 <div class="form-group">
-                    <input type="text" id="turmaUser" placeholder="Sua Turma (Ex: 1º Ano B)" required>
+                    <input type="text" name="Turma" placeholder="Sua Turma (Ex: 1º Ano B)" required>
                 </div>
                 <div class="form-group">
-                    <textarea id="textoProposta" rows="4" placeholder="Escreva aqui sua ideia ou proposta para a escola..." required></textarea>
+                    <textarea name="Proposta / Ideia" rows="5" placeholder="Escreva aqui sua ideia ou proposta para a escola..." required></textarea>
                 </div>
 
-                <button type="submit" class="btn-submit">Enviar Ideia</button>
+                <button type="submit" class="btn-submit">Enviar Proposta por E-mail</button>
             </form>
-
-            <div id="listaPropostas" class="propostas-lista"></div>
         </div>
     </section>
 
@@ -394,47 +378,15 @@
     </footer>
 
     <script>
-        // Função para alternar entre as abas sem falhar
         function trocarAba(event, idAba) {
-            // Esconde todas as abas
             const abas = document.querySelectorAll('.tab-content');
             abas.forEach(aba => aba.classList.remove('active'));
 
-            // Tira o destaque de todos os botões
             const botoes = document.querySelectorAll('.tab-btn');
             botoes.forEach(btn => btn.classList.remove('active'));
 
-            // Ativa a aba clicada e o botão correspondente
             document.getElementById(idAba).classList.add('active');
             event.currentTarget.classList.add('active');
-        }
-
-        // Função para simular o envio da proposta e exibir na tela
-        function adicionarProposta(event) {
-            event.preventDefault();
-
-            const nome = document.getElementById('nomeUser').value || 'Estudante Anônimo';
-            const turma = document.getElementById('turmaUser').value;
-            const texto = document.getElementById('textoProposta').value;
-            const nota = document.querySelector('input[name="estrelas"]:checked').value;
-
-            // Cria o elemento visual da proposta
-            const lista = document.getElementById('listaPropostas');
-            const novoCard = document.createElement('div');
-            novoCard.className = 'card-proposta';
-            
-            let estrelasTexto = '★'.repeat(nota);
-            novoCard.innerHTML = `
-                <strong>${nome} (${turma})</strong> - <span style="color:#ffb400;">${estrelasTexto}</span>
-                <p style="margin-top:5px; color:#333;">${texto}</p>
-            `;
-
-            // Adiciona no topo da lista
-            lista.prepend(novoCard);
-
-            // Reseta o formulário
-            document.getElementById('formProposta').reset();
-            alert('Obrigado! Sua proposta foi enviada com sucesso e adicionada à lista abaixo.');
         }
     </script>
 </body>
