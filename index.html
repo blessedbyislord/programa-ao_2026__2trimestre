@@ -1,91 +1,227 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GAME DO SABER</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME DO SABER - Colégio Roberto Langer Junior</title>
+    
+    <style>
+        /* --- Estilos Gerais --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  <style>
-    /* Estilos Gerais */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
 
-    body {
-      background-color: #f4f7f6;
-      color: #333;
-    }
+        /* --- 1. Tela Inicial (Ocupa 100% da tela) --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+        }
 
-    /* Cabeçalho e Abas no Topo */
-    header {
-      background-color: #1a365d;
-      color: white;
-      text-align: center;
-      padding-top: 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
 
-    header h1 {
-      font-size: 2rem;
-      letter-spacing: 2px;
-      margin-bottom: 5px;
-    }
+        .hero h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
 
-    header p {
-      font-size: 0.9rem;
-      color: #cbd5e0;
-      margin-bottom: 15px;
-    }
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-top: 20px;
+        }
 
-    /* Menu de Abas */
-    .tabs-menu {
-      display: flex;
-      justify-content: center;
-      background-color: #2b6cb0;
-      list-style: none;
-    }
+        .scroll-down {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            animation: bounce 2s infinite;
+        }
 
-    .tab-button {
-      padding: 12px 24px;
-      color: white;
-      background: none;
-      border: none;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s, color 0.3s;
-    }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
 
-    .tab-button:hover {
-      background-color: #2c5282;
-    }
+        /* --- 2. Seções da Página --- */
+        .section {
+            padding: 80px 20px;
+            text-align: center;
+        }
 
-    /* Aba ativa */
-    .tab-button.active {
-      background-color: #f4f7f6;
-      color: #1a365d;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-    }
+        .section-light {
+            background-color: #ffffff;
+        }
 
-    /* Conteúdo das Abas */
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      text-align: center;
-    }
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            color: #1e3c72;
+        }
 
-    .tab-content {
-      display: none; /* Esconde o conteúdo por padrão */
-      animation: fadeIn 0.
+        /* Containers de Imagem Flexíveis e Grid */
+        .flex-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .flex-gallery img {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .flex-gallery img:hover {
+            transform: scale(1.02);
+        }
+
+        .grid-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .grid-gallery img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .grid-gallery img:hover {
+            transform: translateY(-5px);
+        }
+
+        /* --- 3. Formulário de Ideias --- */
+        .form-container {
+            background-color: #ffffff;
+            padding: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .form-container p {
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #2a5298;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        button {
+            background-color: #2a5298;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1e3c72;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #222;
+            color: #ddd;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>GAME DO SABER</h1>
+        <h2>Colégio Estadual Roberto Langer Junior</h2>
+        <p>NOSSA ESCOLA, NOSSO COMPROMISSO.</p>
+        <p>O que nós podemos fazer para tornar nossa escola ainda melhor?</p>
+        
+        <div class="scroll-down">
+            <p>Arraste para baixo ↓</p>
+        </div>
+    </header>
+
+    <section class="section section-light">
+        <h3 class="section-title">Nossa Escola</h3>
+        <div class="flex-gallery">
+            <img src="logoescola.jpeg" alt="Logo do Colégio">
+            <img src="frenteescola.jpeg" alt="Frente da Escola">
+        </div>
+    </section>
+
+    <section class="section">
+        <h3 class="section-title">O Cuidado Começa Aqui</h3>
+        <div class="flex-gallery" style="margin-bottom: 20px;">
+            <img src="sala de aula.jpeg" alt="Sala de Aula">
+        </div>
+        <p style="max-width: 800px; margin: 0 auto; font-size: 1.1rem;">
+            O cuidado com o patrimônio da escola é responsabilidade de todos os estudantes e funcionários. 
+            Os bens duráveis são importantes para o desenvolvimento dos estudantes e geram um ambiente melhor 
+            para todos os envolvidos.
+        </p>
+    </section>
+
+    <section class="section section-light">
+        <h3 class="section-title">Ações e Cuidados</h3>
+        <div class="grid-gallery">
+            <img src="1.png" alt="Ação 1">
+            <img src="2.png" alt="Ação 2">
