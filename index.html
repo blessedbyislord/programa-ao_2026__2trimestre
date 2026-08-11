@@ -23,26 +23,46 @@
         }
 
         /* ==========================================
-           2. ANIMAÇÕES (LÂMPADAS PISCANDO)
+           2. ANIMAÇÃO DE LÂMPADAS PISCANDO (ABERTURA)
            ========================================== */
-        @keyframes lampFlicker {
-            0%, 100% { opacity: 1; filter: drop-shadow(0 0 12px #f59e0b); transform: scale(1); }
-            30% { opacity: 0.3; filter: none; transform: scale(0.95); }
-            35% { opacity: 1; filter: drop-shadow(0 0 15px #fbbf24); transform: scale(1.05); }
-            70% { opacity: 0.4; filter: none; transform: scale(0.98); }
-            75% { opacity: 1; filter: drop-shadow(0 0 18px #f59e0b); transform: scale(1); }
+        @keyframes piscarLuz {
+            0%, 100% {
+                opacity: 1;
+                filter: drop-shadow(0 0 15px #f59e0b) drop-shadow(0 0 25px #fbbf24);
+                transform: scale(1.1);
+            }
+            20% {
+                opacity: 0.3;
+                filter: none;
+                transform: scale(0.95);
+            }
+            25% {
+                opacity: 1;
+                filter: drop-shadow(0 0 20px #fbbf24);
+                transform: scale(1.15);
+            }
+            55% {
+                opacity: 0.4;
+                filter: none;
+                transform: scale(0.98);
+            }
+            60% {
+                opacity: 1;
+                filter: drop-shadow(0 0 15px #f59e0b);
+                transform: scale(1.05);
+            }
         }
 
-        .lampada-animada {
+        .lampada-pisca {
             display: inline-block;
-            font-size: 2rem;
-            animation: lampFlicker 3s infinite ease-in-out;
-            margin: 0 8px;
+            font-size: 2.2rem;
+            animation: piscarLuz 2.5s infinite ease-in-out;
+            margin: 0 10px;
             vertical-align: middle;
         }
 
         /* ==========================================
-           3. TELA DE AUTENTICAÇÃO (LOGIN OPCIONAL)
+           3. OVERLAY DE LOGIN (OCULTO POR PADRÃO)
            ========================================== */
         .auth-overlay {
             position: fixed;
@@ -50,28 +70,54 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(8px);
-            display: flex;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            display: none; /* Escondido por padrão para não obrigar login */
             justify-content: center;
             align-items: center;
             z-index: 9999;
             padding: 20px;
         }
 
+        .auth-overlay.active {
+            display: flex;
+        }
+
         .auth-card {
             background: #ffffff;
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             border-radius: 16px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             overflow: hidden;
+            position: relative;
             animation: popIn 0.3s ease;
         }
 
         @keyframes popIn {
-            from { transform: scale(0.92); opacity: 0; }
+            from { transform: scale(0.9); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
+        }
+
+        .btn-fechar-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-fechar-modal:hover {
+            background: #ef4444;
+            color: #fff;
         }
 
         .auth-header {
@@ -82,14 +128,12 @@
         }
 
         .auth-header h2 {
-            font-size: 1.8rem;
-            letter-spacing: 1px;
+            font-size: 1.6rem;
         }
 
         .auth-header p {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #00d2ff;
-            margin-top: 4px;
         }
 
         .auth-tabs {
@@ -99,13 +143,13 @@
 
         .auth-tab-btn {
             flex: 1;
-            padding: 14px;
+            padding: 12px;
             border: none;
             background: transparent;
             font-weight: bold;
             color: #64748b;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: 0.3s;
         }
 
         .auth-tab-btn.active {
@@ -121,7 +165,7 @@
         .auth-form {
             display: none;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .auth-form.active {
@@ -130,12 +174,11 @@
 
         .auth-form input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
             font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s;
         }
 
         .auth-form input:focus {
@@ -152,30 +195,12 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
+            margin-top: 5px;
         }
 
         .btn-auth:hover {
             background: #00d2ff;
             color: #1b365d;
-        }
-
-        .btn-guest-opt {
-            background: #e2e8f0;
-            color: #475569;
-            border: 1px solid #cbd5e1;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-            transition: 0.2s;
-        }
-
-        .btn-guest-opt:hover {
-            background: #cbd5e1;
-            color: #0f172a;
         }
 
         .link-esqueci {
@@ -187,7 +212,7 @@
         }
 
         /* ==========================================
-           4. PAINEL DE USUÁRIO E CABEÇALHO
+           4. BARRA DE USUÁRIO E CABEÇALHO
            ========================================== */
         .user-bar {
             background: #0f172a;
@@ -200,22 +225,23 @@
         }
 
         .user-bar button {
-            background: #3b82f6;
-            color: #ffffff;
+            background: #00d2ff;
+            color: #0f172a;
             border: none;
             padding: 6px 14px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
+            transition: 0.2s;
         }
 
         .user-bar button:hover {
-            background: #2563eb;
+            background: #38bdf8;
         }
 
         .user-bar button.btn-logout {
             background: #ef4444;
+            color: #ffffff;
         }
 
         .user-bar button.btn-logout:hover {
@@ -226,29 +252,27 @@
             background: linear-gradient(135deg, #1b365d 0%, #2c5364 100%);
             color: #ffffff;
             text-align: center;
-            padding: 40px 20px 30px 20px;
+            padding: 35px 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         header h1 {
-            font-size: 2.8rem;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
         header h2 {
-            font-size: 1.3rem;
-            font-weight: 400;
+            font-size: 1.2rem;
             color: #00d2ff;
-            margin-bottom: 10px;
+            margin-top: 5px;
         }
 
         header p {
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-size: 0.95rem;
             color: #e0e0e0;
+            margin-top: 5px;
+            letter-spacing: 1px;
         }
 
         /* ==========================================
@@ -268,12 +292,12 @@
         .tab-btn {
             background: none;
             border: none;
-            padding: 18px 25px;
-            font-size: 1rem;
+            padding: 16px 22px;
+            font-size: 0.95rem;
             font-weight: bold;
             color: #555;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             border-bottom: 4px solid transparent;
         }
 
@@ -292,7 +316,7 @@
             display: none;
             max-width: 1100px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 35px 20px;
             animation: surgir 0.4s ease-in-out;
         }
 
@@ -306,7 +330,7 @@
         }
 
         /* ==========================================
-           6. CARDS E GALERIAS
+           6. CARDS, GALERIA E LAYOUTS
            ========================================== */
         .titulo-secao {
             text-align: center;
@@ -340,7 +364,7 @@
             overflow: hidden;
             box-shadow: 0 6px 15px rgba(0,0,0,0.08);
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
             max-width: 450px;
             width: 100%;
         }
@@ -357,7 +381,6 @@
             padding: 12px;
             font-weight: bold;
             color: #444;
-            background-color: #ffffff;
         }
 
         .grid-acoes {
@@ -371,7 +394,7 @@
             width: 100%;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
 
         .grid-acoes img:hover { transform: scale(1.03); }
@@ -389,7 +412,7 @@
         }
 
         /* ==========================================
-           7. FORMULÁRIO DE PROPOSTAS & AGRADECIMENTO
+           7. FORMULÁRIO E CARD DE AGRADECIMENTO
            ========================================== */
         .form-box {
             background: #ffffff;
@@ -432,7 +455,6 @@
             border-radius: 8px;
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.2s;
         }
 
         .form-group input:focus, .form-group textarea:focus {
@@ -449,7 +471,7 @@
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
+            transition: 0.3s;
         }
 
         .btn-submit:hover {
@@ -457,38 +479,36 @@
             color: #1b365d;
         }
 
-        /* Layout Card de Agradecimento */
-        .thanks-card {
-            background: linear-gradient(135deg, #0f172a 0%, #1b365d 100%);
+        /* Card Agradecimento */
+        .card-agradecimento {
+            background: linear-gradient(135deg, #0f172a, #1b365d);
             color: #ffffff;
             border-radius: 16px;
-            padding: 40px 25px;
+            padding: 35px 25px;
             text-align: center;
-            margin-top: 40px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
+            margin-top: 35px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        .thanks-card h3 {
-            font-size: 2.2rem;
+        .card-agradecimento h3 {
+            font-size: 2rem;
             color: #00d2ff;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
-        .thanks-card p {
-            font-size: 1.1rem;
+        .card-agradecimento p {
+            font-size: 1.05rem;
             color: #e2e8f0;
             max-width: 700px;
             margin: 0 auto;
         }
 
         /* ==========================================
-           8. ABA DE PERFIL DO USUÁRIO
+           8. ABA DE PERFIL
            ========================================== */
         .perfil-card {
             background: #ffffff;
-            max-width: 600px;
+            max-width: 550px;
             margin: 0 auto;
             border-radius: 16px;
             padding: 35px;
@@ -497,11 +517,11 @@
         }
 
         .perfil-avatar {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             background: linear-gradient(135deg, #1b365d, #00d2ff);
             color: white;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: bold;
             border-radius: 50%;
             display: flex;
@@ -509,20 +529,6 @@
             justify-content: center;
             margin: 0 auto 20px auto;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .perfil-info {
-            margin-bottom: 20px;
-        }
-
-        .perfil-info h4 {
-            font-size: 1.5rem;
-            color: #1b365d;
-        }
-
-        .perfil-info p {
-            color: #64748b;
-            font-size: 1rem;
         }
 
         .perfil-badge {
@@ -550,8 +556,9 @@
 
     <div id="authOverlay" class="auth-overlay">
         <div class="auth-card">
+            <button class="btn-fechar-modal" onclick="fecharModalAuth()">&times;</button>
             <div class="auth-header">
-                <h2><span class="lampada-animada">💡</span> GAME DO SABER</h2>
+                <h2><span class="lampada-pisca">💡</span> GAME DO SABER</h2>
                 <p>Colégio Roberto Langer Junior</p>
             </div>
 
@@ -562,46 +569,44 @@
 
             <div class="auth-body">
                 <form id="formLogin" class="auth-form active" onsubmit="fazerLogin(event)">
-                    <input type="email" id="loginEmail" placeholder="Seu E-mail registrado" required>
+                    <input type="email" id="loginEmail" placeholder="Seu E-mail" required>
                     <input type="password" id="loginSenha" placeholder="Sua Senha" required>
                     <span class="link-esqueci" onclick="mostrarFormAuth('formReset')">Esqueceu a senha?</span>
-                    <button type="submit" class="btn-auth">Acessar o Site</button>
-                    <button type="button" class="btn-guest-opt" onclick="entrarComoConvidado()">Continuar como Convidado</button>
+                    <button type="submit" class="btn-auth">Acessar</button>
                 </form>
 
                 <form id="formCadastro" class="auth-form" onsubmit="cadastrarUsuario(event)">
-                    <input type="text" id="cadNome" placeholder="Seu Nome Completo" required>
+                    <input type="text" id="cadNome" placeholder="Nome Completo" required>
                     <input type="text" id="cadTurma" placeholder="Sua Turma (Ex: 1º Ano B)" required>
                     <input type="email" id="cadEmail" placeholder="Seu E-mail" required>
                     <input type="password" id="cadSenha" placeholder="Crie uma Senha" required>
                     <button type="submit" class="btn-auth">Criar Conta</button>
-                    <button type="button" class="btn-guest-opt" onclick="entrarComoConvidado()">Continuar como Convidado</button>
                 </form>
 
                 <form id="formReset" class="auth-form" onsubmit="solicitarCodigoReset(event)">
-                    <p style="font-size:0.85rem; color:#64748b;">Digite seu e-mail cadastrado para receber o código de verificação.</p>
-                    <input type="email" id="resetEmail" placeholder="Seu E-mail cadastrado" required>
+                    <p style="font-size:0.85rem; color:#64748b;">Digite seu e-mail para receber o código.</p>
+                    <input type="email" id="resetEmail" placeholder="Seu E-mail" required>
                     <button type="submit" class="btn-auth">Enviar Código</button>
                     <span class="link-esqueci" style="text-align:center;" onclick="mostrarFormAuth('formLogin')">Voltar ao Login</span>
                 </form>
 
                 <form id="formCodigoSenha" class="auth-form" onsubmit="redefinirSenhaComCodigo(event)">
-                    <p style="font-size:0.85rem; color:#10b981; font-weight:bold;">Código gerado com sucesso!</p>
+                    <p style="font-size:0.85rem; color:#10b981; font-weight:bold;">Código enviado com sucesso!</p>
                     <input type="text" id="inputCodigo" placeholder="Digite o Código de 6 dígitos" required>
                     <input type="password" id="novaSenhaInput" placeholder="Sua Nova Senha" required>
-                    <button type="submit" class="btn-auth">Confirmar Nova Senha</button>
+                    <button type="submit" class="btn-auth">Confirmar Senha</button>
                 </form>
             </div>
         </div>
     </div>
 
     <div id="userBar" class="user-bar">
-        <span id="userInfoText">Modo Convidado (Sem Login)</span>
+        <span id="userInfoText">Modo Convidado (Navegação Livre)</span>
         <button id="userBarBtn" onclick="abrirModalAuth()">Fazer Login</button>
     </div>
 
     <header>
-        <h1><span class="lampada-animada">💡</span> GAME DO SABER <span class="lampada-animada">💡</span></h1>
+        <h1><span class="lampada-pisca">💡</span> GAME DO SABER <span class="lampada-pisca">💡</span></h1>
         <h2>Colégio Estadual Roberto Langer Junior</h2>
         <p>NOSSA ESCOLA, NOSSO COMPROMISSO</p>
     </header>
@@ -618,11 +623,11 @@
         <h3 class="titulo-secao">Conheça a Nossa Estrutura</h3>
         <div class="galeria-flex">
             <figure class="card-foto">
-                <img src="logoescola.jpeg" alt="Logo do Colégio Roberto Langer Junior">
+                <img src="logoescola.jpeg" alt="Logo da Escola">
                 <figcaption>Logo Oficial da Escola</figcaption>
             </figure>
             <figure class="card-foto">
-                <img src="frenteescola.jpeg" alt="Frente do Colégio Roberto Langer Junior">
+                <img src="frenteescola.jpeg" alt="Frente da Escola">
                 <figcaption>Fachada Principal</figcaption>
             </figure>
         </div>
@@ -683,21 +688,21 @@
                     <input type="text" id="propTurma" name="Turma" placeholder="Sua Turma" required>
                 </div>
                 <div class="form-group">
-                    <textarea name="Proposta / Ideia" rows="5" placeholder="Escreva aqui sua ideia ou proposta para a escola..." required></textarea>
+                    <textarea name="Proposta / Ideia" rows="5" placeholder="Escreva aqui sua ideia ou proposta..." required></textarea>
                 </div>
 
                 <button type="submit" class="btn-submit">Enviar Proposta por E-mail</button>
             </form>
         </div>
 
-        <div class="thanks-card">
-            <h3><span class="lampada-animada">💡</span> OBRIGADO POR PARTICIPAR!</h3>
+        <div class="card-agradecimento">
+            <h3><span class="lampada-pisca">💡</span> OBRIGADO POR PARTICIPAR!</h3>
             <p>Sua voz e sua proposta são fundamentais para construirmos uma escola cada vez melhor. Juntos, estamos transformando o Colégio Estadual Roberto Langer Junior!</p>
         </div>
     </section>
 
     <section id="aba-perfil" class="tab-content">
-        <h3 class="titulo-secao">Perfil do Usuário</h3>
+        <h3 class="titulo-secao">Meu Perfil</h3>
         <div id="perfilConteudo" class="perfil-card">
             </div>
     </section>
@@ -710,7 +715,7 @@
         let codigoGerado = null;
         let emailParaReset = '';
 
-        // Recupera banco de dados local ou gera contas padrão
+        // Banco de dados local
         function obterUsuarios() {
             let u = localStorage.getItem('game_saber_users');
             if(!u) {
@@ -732,11 +737,11 @@
             return JSON.parse(u);
         }
 
-        // Alterna formulários dentro da janela de login
+        // Alternar abas do modal
         function mostrarFormAuth(formId) {
             document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            const targetForm = document.getElementById(formId);
-            if(targetForm) targetForm.classList.add('active');
+            const target = document.getElementById(formId);
+            if(target) target.classList.add('active');
 
             const btns = document.querySelectorAll('.auth-tab-btn');
             btns.forEach(b => b.classList.remove('active'));
@@ -745,27 +750,14 @@
         }
 
         function abrirModalAuth() {
-            document.getElementById('authOverlay').style.display = 'flex';
+            document.getElementById('authOverlay').classList.add('active');
         }
 
-        // Fecha a autenticação e entra como Convidado
-        function entrarComoConvidado() {
-            sessionStorage.removeItem('usuario_logado');
-            document.getElementById('authOverlay').style.display = 'none';
-            
-            document.getElementById('userInfoText').innerText = "Modo Convidado (Sem Login)";
-            const btn = document.getElementById('userBarBtn');
-            btn.innerText = "Fazer Login";
-            btn.className = "";
-            btn.onclick = abrirModalAuth;
-
-            document.getElementById('propNome').value = "";
-            document.getElementById('propTurma').value = "";
-            
-            atualizarAbaPerfil(null);
+        function fecharModalAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
         }
 
-        // Cadastra um novo usuário
+        // Cadastrar
         function cadastrarUsuario(e) {
             e.preventDefault();
             const nome = document.getElementById('cadNome').value.trim();
@@ -788,7 +780,7 @@
             document.getElementById('formCadastro').reset();
         }
 
-        // Realiza o login
+        // Login
         function fazerLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.toLowerCase().trim();
@@ -799,15 +791,15 @@
             if (usuarios[email] && usuarios[email].senha === senha) {
                 const userObj = usuarios[email];
                 sessionStorage.setItem('usuario_logado', JSON.stringify({ email, ...userObj }));
-                iniciarSessao(userObj);
+                iniciarSessao({ email, ...userObj });
             } else {
                 alert('E-mail ou senha incorretos!');
             }
         }
 
-        // Libera a interface principal para usuário logado
+        // Sessão do Usuário
         function iniciarSessao(userObj) {
-            document.getElementById('authOverlay').style.display = 'none';
+            fecharModalAuth();
             
             document.getElementById('userInfoText').innerHTML = `Bem-vindo(a), <strong>${userObj.nome}</strong> (${userObj.turma})`;
             const btn = document.getElementById('userBarBtn');
@@ -815,56 +807,61 @@
             btn.className = "btn-logout";
             btn.onclick = fazerLogout;
 
-            // Preenchimento automático no formulário de envio
-            document.getElementById('propNome').value = userObj.nome;
-            document.getElementById('propTurma').value = userObj.turma;
+            // Preenche o formulário se disponível
+            const elNome = document.getElementById('propNome');
+            const elTurma = document.getElementById('propTurma');
+            if(elNome) elNome.value = userObj.nome;
+            if(elTurma) elTurma.value = userObj.turma;
 
             atualizarAbaPerfil(userObj);
         }
 
-        // Atualiza os dados na aba de Perfil
+        // Renderiza a Aba de Perfil
         function atualizarAbaPerfil(userObj) {
             const perfilDiv = document.getElementById('perfilConteudo');
+            if(!perfilDiv) return;
+
             if (userObj) {
-                const inicial = userObj.nome.charAt(0).toUpperCase();
+                const inicial = userObj.nome ? userObj.nome.charAt(0).toUpperCase() : 'U';
                 perfilDiv.innerHTML = `
                     <div class="perfil-avatar">${inicial}</div>
-                    <div class="perfil-info">
+                    <div>
                         <h4>${userObj.nome}</h4>
-                        <p>${userObj.email || ''}</p>
+                        <p style="color:#64748b; margin-top:4px;">${userObj.email || ''}</p>
                         <span class="perfil-badge">${userObj.turma}</span>
                     </div>
                     <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                    <p style="font-size: 0.95rem; color: #475569;">Você está conectado ao <strong>Game do Saber</strong>. Suas avaliações e ideias enviadas serão identificadas automaticamente.</p>
+                    <p style="font-size: 0.95rem; color: #475569;">Sua conta está ativa no <strong>Game do Saber</strong>. Suas avaliações e sugestões serão registradas em seu nome.</p>
+                    <button onclick="fazerLogout()" class="btn-auth" style="background:#ef4444; margin-top:20px;">Sair da Conta</button>
                 `;
             } else {
                 perfilDiv.innerHTML = `
                     <div class="perfil-avatar" style="background: #94a3b8;">?</div>
-                    <div class="perfil-info">
+                    <div>
                         <h4>Visitante Convidado</h4>
-                        <p>Você não está autenticado no momento.</p>
+                        <p style="color:#64748b; margin-top:4px;">Você está navegando sem login.</p>
                         <span class="perfil-badge" style="background:#f1f5f9; color:#475569;">Modo Leitura</span>
                     </div>
-                    <button onclick="abrirModalAuth()" class="btn-auth" style="margin-top: 15px;">Fazer Login / Criar Conta</button>
+                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
+                    <p style="font-size: 0.95rem; color: #475569;">Faça login para salvar suas informações e enviar propostas identificadas!</p>
+                    <button onclick="abrirModalAuth()" class="btn-auth" style="margin-top: 15px;">Fazer Login / Cadastrar</button>
                 `;
             }
         }
 
-        // Solicita código de redefinição de senha
+        // Reset de Senha
         function solicitarCodigoReset(e) {
             e.preventDefault();
             emailParaReset = document.getElementById('resetEmail').value.toLowerCase().trim();
             let usuarios = obterUsuarios();
 
             if (!usuarios[emailParaReset]) {
-                alert('E-mail não encontrado no sistema.');
+                alert('E-mail não encontrado.');
                 return;
             }
 
-            // Gera código aleatório de 6 dígitos
             codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
 
-            // Dispara requisição assíncrona para notificação de e-mail
             fetch('https://formsubmit.co/ajax/eduardo.miranda.carlos@escola.pr.gov.br', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -879,14 +876,13 @@
             mostrarFormAuth('formCodigoSenha');
         }
 
-        // Processa e altera a nova senha
         function redefinirSenhaComCodigo(e) {
             e.preventDefault();
             const codDigitado = document.getElementById('inputCodigo').value.trim();
             const novaSenha = document.getElementById('novaSenhaInput').value;
 
             if (codDigitado !== codigoGerado) {
-                alert('Código incorreto! Digite o código de 6 dígitos corretamente.');
+                alert('Código incorreto!');
                 return;
             }
 
@@ -894,29 +890,40 @@
             usuarios[emailParaReset].senha = novaSenha;
             localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
 
-            alert('Senha alterada com sucesso! Entre agora utilizando sua nova senha.');
+            alert('Senha alterada com sucesso!');
             document.getElementById('formReset').reset();
             document.getElementById('formCodigoSenha').reset();
             mostrarFormAuth('formLogin');
         }
 
-        // Encerra a sessão do usuário
+        // Logout
         function fazerLogout() {
             sessionStorage.removeItem('usuario_logado');
-            entrarComoConvidado();
+            document.getElementById('userInfoText').innerText = "Modo Convidado (Navegação Livre)";
+            const btn = document.getElementById('userBarBtn');
+            btn.innerText = "Fazer Login";
+            btn.className = "";
+            btn.onclick = abrirModalAuth;
+
+            const elNome = document.getElementById('propNome');
+            const elTurma = document.getElementById('propTurma');
+            if(elNome) elNome.value = "";
+            if(elTurma) elTurma.value = "";
+
+            atualizarAbaPerfil(null);
         }
 
-        // Troca de abas da página principal
+        // Navegação de Abas
         function trocarAba(event, idAba) {
             document.querySelectorAll('.tab-content').forEach(aba => aba.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-            const targetAba = document.getElementById(idAba);
-            if(targetAba) targetAba.classList.add('active');
+            const target = document.getElementById(idAba);
+            if(target) target.classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        // Checagem inicial ao carregar
+        // Execução Inicial
         window.addEventListener('DOMContentLoaded', () => {
             const logado = sessionStorage.getItem('usuario_logado');
             if (logado) {
