@@ -755,8 +755,7 @@
 
     <section id="aba-perfil" class="tab-content">
         <h3 class="titulo-secao">Meu Perfil</h3>
-        <div id="perfilConteudo" class="perfil-card">
-            </div>
+        <div id="perfilConteudo" class="perfil-card"></div>
     </section>
 
     <footer>
@@ -844,7 +843,7 @@
             }
         }
 
-        // UPLOAD E COMPRESSÃO DE FOTO DE PERFIL (Evita travar o localStorage)
+        // UPLOAD E COMPRESSÃO DE FOTO DE PERFIL
         function alterarFotoPerfil(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
@@ -853,7 +852,6 @@
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
-                        // Redimensiona para max 150x150 mantendo proporção
                         const canvas = document.createElement('canvas');
                         let width = img.width;
                         let height = img.height;
@@ -876,7 +874,6 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // Converte para JPEG leve
                         const fotoOtimizada = canvas.toDataURL('image/jpeg', 0.8);
 
                         let usuarioLogado = null;
@@ -888,17 +885,15 @@
                             usuarioLogado.avatar = fotoOtimizada;
                             try {
                                 sessionStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
-                                let usuarios = obterUsuarios();
-                                if (usuarios[usuarioLogado.email]) {
-                                    usuarios[usuarioLogado.email].avatar = fotoOtimizada;
-                                    localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
+                                let users = obterUsuarios();
+                                if (users[usuarioLogado.email]) {
+                                    users[usuarioLogado.email].avatar = fotoOtimizada;
+                                    localStorage.setItem('game_saber_users', JSON.stringify(users));
                                 }
-                            } catch(err){}
-
-                            iniciarSessao(usuarioLogado);
-                            alert('📷 Foto de perfil salva com sucesso!');
-                        } else {
-                            alert('Faça login para salvar a foto!');
+                                atualizarInterfaceUsuario();
+                            } catch(err) {
+                                alert("Erro ao salvar a foto de perfil.");
+                            }
                         }
                     };
                     img.src = e.target.result;
@@ -907,234 +902,193 @@
             }
         }
 
-        function mostrarFormAuth(formId) {
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            const target = document.getElementById(formId);
-            if(target) target.classList.add('active');
+        // TROCA DE ABAS NAVEGAÇÃO
+        function trocarAba(evt, idAba) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
 
-            const btns = document.querySelectorAll('.auth-tab-btn');
-            btns.forEach(b => b.classList.remove('active'));
-            if(formId === 'formLogin' && btns[0]) btns[0].classList.add('active');
-            if(formId === 'formCadastro' && btns[1]) btns[1].classList.add('active');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(idAba).classList.add('active');
+            evt.currentTarget.classList.add('active');
         }
 
+        // MODAL DE AUTENTICAÇÃO
         function abrirModalAuth() {
-            const overlay = document.getElementById('authOverlay');
-            if(overlay) overlay.classList.add('active');
+            document.getElementById('authOverlay').classList.add('active');
         }
 
         function fecharModalAuth() {
-            const overlay = document.getElementById('authOverlay');
-            if(overlay) overlay.classList.remove('active');
+            document.getElementById('authOverlay').classList.remove('active');
         }
 
-        function cadastrarUsuario(e) {
-            e.preventDefault();
+        function mostrarFormAuth(formId) {
+            const forms = document.querySelectorAll('.auth-form');
+            forms.forEach(f => f.classList.remove('active'));
+
+            const targetForm = document.getElementById(formId);
+            if(targetForm) targetForm.classList.add('active');
+
+            const tabs = document.querySelectorAll('.auth-tab-btn');
+            tabs.forEach(t => t.classList.remove('active'));
+            if (formId === 'formLogin' && tabs[0]) tabs[0].classList.add('active');
+            if (formId === 'formCadastro' && tabs[1]) tabs[1].classList.add('active');
+        }
+
+        // AUTENTICAÇÃO E CADASTRO
+        function fazerLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const senha = document.getElementById('loginSenha').value;
+
+            const users = obterUsuarios();
+            if (users[email] && users[email].senha === senha) {
+                const userObj = { email, ...users[email] };
+                sessionStorage.setItem('usuario_logado', JSON.stringify(userObj));
+                fecharModalAuth();
+                atualizarInterfaceUsuario();
+                alert('Login realizado com sucesso!');
+            } else {
+                alert('E-mail ou senha incorretos.');
+            }
+        }
+
+        function cadastrarUsuario(event) {
+            event.preventDefault();
             const nome = document.getElementById('cadNome').value.trim();
             const turma = document.getElementById('cadTurma').value.trim();
-            const email = document.getElementById('cadEmail').value.toLowerCase().trim();
+            const email = document.getElementById('cadEmail').value.trim();
             const senha = document.getElementById('cadSenha').value;
 
-            let usuarios = obterUsuarios();
-
-            if (usuarios[email]) {
+            const users = obterUsuarios();
+            if (users[email]) {
                 alert('Este e-mail já está cadastrado!');
                 return;
             }
 
-            usuarios[email] = { nome, turma, senha, avatar: null };
-            try {
-                localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
-            } catch(err){}
+            users[email] = { nome, turma, senha, avatar: null };
+            localStorage.setItem('game_saber_users', JSON.stringify(users));
 
-            alert('Conta criada com sucesso! Faça seu login.');
-            mostrarFormAuth('formLogin');
-            document.getElementById('formCadastro').reset();
-        }
+            const userObj = { email, nome, turma, senha, avatar: null };
+            sessionStorage.setItem('usuario_logado', JSON.stringify(userObj));
 
-        function fazerLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.toLowerCase().trim();
-            const senha = document.getElementById('loginSenha').value;
-
-            let usuarios = obterUsuarios();
-
-            if (usuarios[email] && usuarios[email].senha === senha) {
-                const userObj = usuarios[email];
-                try {
-                    sessionStorage.setItem('usuario_logado', JSON.stringify({ email, ...userObj }));
-                } catch(err){}
-                iniciarSessao({ email, ...userObj });
-            } else {
-                alert('E-mail ou senha incorretos!');
-            }
-        }
-
-        function iniciarSessao(userObj) {
             fecharModalAuth();
-            
-            const userInfoText = document.getElementById('userInfoText');
-            if(userInfoText) {
-                userInfoText.innerHTML = `Bem-vindo(a), <strong>${userObj.nome}</strong> (${userObj.turma})`;
-            }
-
-            const btn = document.getElementById('userBarBtn');
-            if(btn) {
-                btn.innerText = "Sair";
-                btn.className = "btn-logout";
-                btn.onclick = fazerLogout;
-            }
-
-            const elNome = document.getElementById('propNome');
-            const elTurma = document.getElementById('propTurma');
-            if(elNome) elNome.value = userObj.nome;
-            if(elTurma) elTurma.value = userObj.turma;
-
-            atualizarAbaPerfil(userObj);
+            atualizarInterfaceUsuario();
+            alert('Conta criada com sucesso!');
         }
 
-        function atualizarAbaPerfil(userObj) {
-            const perfilDiv = document.getElementById('perfilConteudo');
-            if(!perfilDiv) return;
+        function solicitarCodigoReset(event) {
+            event.preventDefault();
+            const email = document.getElementById('resetEmail').value.trim();
+            const users = obterUsuarios();
 
-            if (userObj) {
-                const inicial = userObj.nome ? userObj.nome.charAt(0).toUpperCase() : 'U';
-                
-                let avatarHTML = userObj.avatar 
-                    ? `<img src="${userObj.avatar}" class="perfil-avatar" alt="Foto">` 
-                    : `<div class="perfil-avatar">${inicial}</div>`;
-
-                perfilDiv.innerHTML = `
-                    <div class="perfil-avatar-wrapper">
-                        ${avatarHTML}
-                    </div>
-                    
-                    <label for="inputFotoPerfil" class="btn-upload-foto">📷 Alterar Foto</label>
-                    <input type="file" id="inputFotoPerfil" accept="image/*" onchange="alterarFotoPerfil(this)">
-                    
-                    <div style="margin-top: 15px;">
-                        <h4>${userObj.nome}</h4>
-                        <p style="color:#64748b; margin-top:4px;">${userObj.email || ''}</p>
-                        <span class="perfil-badge">${userObj.turma}</span>
-                    </div>
-
-                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                    <p style="font-size: 0.95rem; color: #475569;">Sua conta está ativa no <strong>Game do Saber</strong>.</p>
-                    <button onclick="fazerLogout()" class="btn-auth" style="background:#ef4444; margin-top:20px;">Sair da Conta</button>
-                `;
-            } else {
-                perfilDiv.innerHTML = `
-                    <div class="perfil-avatar-wrapper">
-                        <div class="perfil-avatar" style="background: #94a3b8;">?</div>
-                    </div>
-                    <div>
-                        <h4>Visitante Convidado</h4>
-                        <p style="color:#64748b; margin-top:4px;">Você está navegando sem login.</p>
-                        <span class="perfil-badge" style="background:#f1f5f9; color:#475569;">Modo Leitura</span>
-                    </div>
-                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                    <p style="font-size: 0.95rem; color: #475569;">Faça login para salvar suas informações e foto de perfil!</p>
-                    <button onclick="abrirModalAuth()" class="btn-auth" style="margin-top: 15px;">Fazer Login / Cadastrar</button>
-                `;
-            }
-        }
-
-        function solicitarCodigoReset(e) {
-            e.preventDefault();
-            emailParaReset = document.getElementById('resetEmail').value.toLowerCase().trim();
-            let usuarios = obterUsuarios();
-
-            if (!usuarios[emailParaReset]) {
-                alert('E-mail não encontrado.');
+            if (!users[email]) {
+                alert('E-mail não encontrado no sistema.');
                 return;
             }
 
+            emailParaReset = email;
             codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
-
-            fetch('https://formsubmit.co/ajax/eduardo.miranda.carlos@escola.pr.gov.br', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    _subject: "Código de Redefinição - Game do Saber",
-                    emailSolicitante: emailParaReset,
-                    codigoVerificacao: codigoGerado
-                })
-            }).catch(() => {});
-
-            alert(`Código enviado!\n\nCódigo de teste: ${codigoGerado}`);
+            alert(`Seu código de verificação é: ${codigoGerado}`);
             mostrarFormAuth('formCodigoSenha');
         }
 
-        function redefinirSenhaComCodigo(e) {
-            e.preventDefault();
-            const codDigitado = document.getElementById('inputCodigo').value.trim();
+        function redefinirSenhaComCodigo(event) {
+            event.preventDefault();
+            const codigoInput = document.getElementById('inputCodigo').value.trim();
             const novaSenha = document.getElementById('novaSenhaInput').value;
 
-            if (codDigitado !== codigoGerado) {
+            if (codigoInput !== codigoGerado) {
                 alert('Código incorreto!');
                 return;
             }
 
-            let usuarios = obterUsuarios();
-            if (usuarios[emailParaReset]) {
-                usuarios[emailParaReset].senha = novaSenha;
-                try {
-                    localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
-                } catch(err){}
+            const users = obterUsuarios();
+            if (users[emailParaReset]) {
+                users[emailParaReset].senha = novaSenha;
+                localStorage.setItem('game_saber_users', JSON.stringify(users));
+                alert('Senha redefinida com sucesso! Faça login com a nova senha.');
+                mostrarFormAuth('formLogin');
+            }
+        }
+
+        // GERENCIAMENTO DA INTERFACE E PERFIL
+        function atualizarInterfaceUsuario() {
+            let user = null;
+            try {
+                user = JSON.parse(sessionStorage.getItem('usuario_logado'));
+            } catch(e) {}
+
+            const userInfoText = document.getElementById('userInfoText');
+            const userBarBtn = document.getElementById('userBarBtn');
+
+            if (user) {
+                userInfoText.textContent = `Olá, ${user.nome} (${user.turma})`;
+                userBarBtn.textContent = 'Sair';
+                userBarBtn.className = 'btn-logout';
+                userBarBtn.onclick = fazerLogout;
+
+                const propNome = document.getElementById('propNome');
+                const propTurma = document.getElementById('propTurma');
+                if (propNome) propNome.value = user.nome;
+                if (propTurma) propTurma.value = user.turma;
+            } else {
+                userInfoText.textContent = 'Modo Convidado (Navegação Livre)';
+                userBarBtn.textContent = 'Fazer Login';
+                userBarBtn.className = '';
+                userBarBtn.onclick = abrirModalAuth;
             }
 
-            alert('Senha redefinida com sucesso!');
-            document.getElementById('formReset').reset();
-            document.getElementById('formCodigoSenha').reset();
-            mostrarFormAuth('formLogin');
+            renderizarPerfil();
+        }
+
+        function renderizarPerfil() {
+            const perfilContainer = document.getElementById('perfilConteudo');
+            if (!perfilContainer) return;
+
+            let user = null;
+            try {
+                user = JSON.parse(sessionStorage.getItem('usuario_logado'));
+            } catch(e) {}
+
+            if (user) {
+                const avatarHTML = user.avatar 
+                    ? `<img src="${user.avatar}" alt="Foto de Perfil" class="perfil-avatar">` 
+                    : `<div class="perfil-avatar">${user.nome.charAt(0).toUpperCase()}</div>`;
+
+                perfilContainer.innerHTML = `
+                    <div class="perfil-avatar-wrapper">
+                        ${avatarHTML}
+                    </div>
+                    <label for="inputFotoPerfil" class="btn-upload-foto">📷 Alterar Foto</label>
+                    <input type="file" id="inputFotoPerfil" accept="image/*" onchange="alterarFotoPerfil(this)">
+                    <h2 style="margin-top: 15px; color: #1b365d;">${user.nome}</h2>
+                    <p class="perfil-badge">${user.turma}</p>
+                    <p style="margin-top: 10px; font-size: 0.9rem; color: #64748b;">${user.email}</p>
+                `;
+            } else {
+                perfilContainer.innerHTML = `
+                    <div class="perfil-avatar-wrapper">
+                        <div class="perfil-avatar">👤</div>
+                    </div>
+                    <h2 style="color: #1b365d; margin-top: 15px;">Modo Convidado</h2>
+                    <p style="margin: 10px 0; color: #64748b;">Faça login para salvar suas informações e personalizar seu perfil.</p>
+                    <button class="btn-auth" style="margin-top: 15px;" onclick="abrirModalAuth()">Fazer Login / Cadastrar</button>
+                `;
+            }
         }
 
         function fazerLogout() {
-            try {
-                sessionStorage.removeItem('usuario_logado');
-            } catch(err){}
-            
-            const userInfoText = document.getElementById('userInfoText');
-            if(userInfoText) userInfoText.innerText = "Modo Convidado (Navegação Livre)";
-            
-            const btn = document.getElementById('userBarBtn');
-            if(btn) {
-                btn.innerText = "Fazer Login";
-                btn.className = "";
-                btn.onclick = abrirModalAuth;
-            }
-
-            const elNome = document.getElementById('propNome');
-            const elTurma = document.getElementById('propTurma');
-            if(elNome) elNome.value = "";
-            if(elTurma) elTurma.value = "";
-
-            atualizarAbaPerfil(null);
+            sessionStorage.removeItem('usuario_logado');
+            atualizarInterfaceUsuario();
+            alert('Você saiu da sua conta.');
         }
 
-        function trocarAba(event, idAba) {
-            document.querySelectorAll('.tab-content').forEach(aba => aba.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-            const target = document.getElementById(idAba);
-            if(target) target.classList.add('active');
-            
-            if(event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
-        }
-
+        // INICIALIZAÇÃO
         window.addEventListener('DOMContentLoaded', () => {
-            let logado = null;
-            try {
-                logado = sessionStorage.getItem('usuario_logado');
-            } catch(err){}
-
-            if (logado) {
-                iniciarSessao(JSON.parse(logado));
-            } else {
-                atualizarAbaPerfil(null);
-            }
+            obterUsuarios();
+            atualizarInterfaceUsuario();
         });
     </script>
 </body>
