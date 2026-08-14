@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Site Moderno & Interativo</title>
+  <title>Meu Site - Completo e Otimizado</title>
   
   <style>
-    /* 1. VARIÁVEIS E TEMAS (LIGHT/DARK) */
+    /* 1. VARIÁVEIS DE COR E TEMAS */
     :root {
       --bg-primary: #f8fafc;
       --bg-card: #ffffff;
@@ -34,7 +34,7 @@
       padding: 0;
       box-sizing: border-box;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
     }
 
     body {
@@ -46,7 +46,7 @@
       line-height: 1.6;
     }
 
-    /* 3. CABEÇALHO & NAVEGAÇÃO */
+    /* 3. CABEÇALHO */
     header {
       background-color: var(--bg-card);
       border-bottom: 1px solid var(--border);
@@ -87,14 +87,22 @@
       color: var(--accent);
     }
 
-    .theme-toggle {
+    /* Botão de Engrenagem */
+    .icon-btn {
       background: transparent;
       border: 1px solid var(--border);
-      padding: 0.5rem 0.8rem;
+      font-size: 1.2rem;
+      padding: 0.4rem 0.6rem;
       border-radius: 8px;
       cursor: pointer;
       color: var(--text-main);
-      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn:hover {
+      background-color: var(--border);
     }
 
     /* 4. CONTEÚDO PRINCIPAL */
@@ -109,28 +117,26 @@
     /* HERO SECTION */
     .hero {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: 3.5rem;
     }
 
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-size: clamp(2rem, 5vw, 3rem);
       margin-bottom: 1rem;
-      line-height: 1.2;
     }
 
     .hero p {
       color: var(--text-muted);
-      font-size: 1.15rem;
-      max-width: 600px;
-      margin: 0 auto 2rem auto;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
     }
 
     .btn-primary {
       background-color: var(--accent);
       color: white;
       border: none;
-      padding: 0.85rem 2rem;
-      font-size: 1rem;
+      padding: 0.85rem 2.5rem;
+      font-size: 1.1rem;
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
@@ -142,47 +148,126 @@
       transform: translateY(-2px);
     }
 
-    /* CARDS SECTION (GRID) */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .card {
+    /* SEÇÃO MEU PERFIL */
+    .profile-section {
       background-color: var(--bg-card);
       border: 1px solid var(--border);
-      padding: 2rem;
       border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 3rem;
       box-shadow: var(--shadow);
     }
 
-    .card:hover {
-      transform: translateY(-4px);
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
     }
 
-    .card-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
     }
 
-    .card h3 {
-      margin-bottom: 0.5rem;
+    .profile-info h3 {
+      font-size: 1.3rem;
     }
 
-    .card p {
+    .profile-info p {
       color: var(--text-muted);
       font-size: 0.95rem;
     }
 
-    /* 5. RODAPÉ */
+    .badge {
+      display: inline-block;
+      margin-top: 0.4rem;
+      padding: 0.2rem 0.6rem;
+      background-color: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 12px;
+    }
+
+    /* 5. MODAL DE CONFIGURAÇÕES */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 200;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .setting-btn {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* RODAPÉ */
     footer {
       border-top: 1px solid var(--border);
       text-align: center;
       padding: 2rem 1.5rem;
       color: var(--text-muted);
       font-size: 0.9rem;
-      margin-top: 4rem;
     }
   </style>
 </head>
@@ -192,53 +277,69 @@
     <div class="nav-container">
       <a href="#" class="logo">✨ WebCraft</a>
       <nav class="nav-links">
-        <a href="#recursos">Recursos</a>
-        <a href="#sobre">Sobre</a>
-        <button class="theme-toggle" id="theme-btn">🌙 Tema</button>
+        <a href="#perfil">Meu Perfil</a>
+        <button class="icon-btn" id="settings-btn" title="Configurações">⚙️</button>
       </nav>
     </div>
   </header>
 
   <main>
     <section class="hero">
-      <h1>Crie Experiências Incríveis na Web</h1>
-      <p>Estrutura limpa, código moderno, responsivo e preparado para expansão rápida.</p>
-      <button class="btn-primary" id="cta-btn">Começar Agora</button>
+      <h1>Bem-vindo de Volta</h1>
+      <p>Acesse sua conta para visualizar seu painel completo.</p>
+      <button class="btn-primary" id="cta-btn">Entrar</button>
     </section>
 
-    <section class="features-grid" id="recursos">
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3>Alta Performance</h3>
-        <p>Código otimizado para carregar instantaneamente em qualquer dispositivo.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">🎨</div>
-        <h3>Design Adaptável</h3>
-        <p>Suporte nativo a Modo Claro e Modo Escuro com variáveis de CSS.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">📱</div>
-        <h3>100% Responsivo</h3>
-        <p>Ajuste automático para telas de celulares, tablets e computadores.</p>
+    <section class="profile-section" id="perfil">
+      <div class="profile-card">
+        <div class="avatar">👤</div>
+        <div class="profile-info">
+          <h3>Meu Perfil</h3>
+          <p>usuario@email.com</p>
+          <span class="badge">Conta Ativa</span>
+        </div>
       </div>
     </section>
   </main>
+
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>⚙️ Configurações</h3>
+        <button class="close-btn" id="close-modal">&times;</button>
+      </div>
+      <div class="setting-item">
+        <span>Aparência</span>
+        <button class="setting-btn" id="theme-btn">🌙 Modo Escuro</button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <p>&copy; 2026 WebCraft. Todos os direitos reservados.</p>
   </footer>
 
   <script>
-    // Configuração do Tema (Dark Mode)
+    // Elementos do Modal de Configurações
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsModal = document.getElementById('settings-modal');
+    const closeModal = document.getElementById('close-modal');
     const themeBtn = document.getElementById('theme-btn');
+
+    // Abrir e fechar Modal
+    settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+    closeModal.addEventListener('click', () => settingsModal.classList.remove('active'));
+    
+    settingsModal.addEventListener('click', (e) => {
+      if (e.target === settingsModal) settingsModal.classList.remove('active');
+    });
+
+    // Lógica do Modo Escuro / Claro
     const currentTheme = localStorage.getItem('theme');
 
     if (currentTheme) {
       document.documentElement.setAttribute('data-theme', currentTheme);
-      themeBtn.textContent = currentTheme === 'dark' ? '☀️ Claro' : '🌙 Escuro';
+      themeBtn.textContent = currentTheme === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Escuro';
     }
 
     themeBtn.addEventListener('click', () => {
@@ -247,17 +348,17 @@
       if (theme === 'dark') {
         document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
-        themeBtn.textContent = '🌙 Escuro';
+        themeBtn.textContent = '🌙 Modo Escuro';
       } else {
         document.documentElement.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark');
-        themeBtn.textContent = '☀️ Claro';
+        themeBtn.textContent = '☀️ Modo Claro';
       }
     });
 
-    // Ação do Botão principal
+    // Ação do Botão Entrar
     document.getElementById('cta-btn').addEventListener('click', () => {
-      alert('O site está funcionando perfeitamente!');
+      alert('Login efetuado com sucesso!');
     });
   </script>
 
