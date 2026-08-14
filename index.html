@@ -1,311 +1,1095 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplicação com Modo Escuro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME DO SABER - Colégio Estadual Roberto Langer Junior</title>
+    
+    <script>
+        // GERADOR DE PAINÉIS SVG OFFLINE (Não depende de internet nem sofre bloqueio de rede escolar)
+        function gerarSvgPlaceholder(titulo) {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="350" viewBox="0 0 600 350">
+                <rect width="100%" height="100%" fill="#1b365d"/>
+                <circle cx="300" cy="140" r="45" fill="#00d2ff" opacity="0.2"/>
+                <text x="50%" y="42%" dominant-baseline="middle" text-anchor="middle" fill="#00d2ff" font-family="Segoe UI, sans-serif" font-size="45">🖼️</text>
+                <text x="50%" y="68%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="22" font-weight="bold">${titulo}</text>
+            </svg>`;
+            return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        }
 
-  <style>
-    /* ============================================================
-       1. VARIÁVEIS DE TEMA (DESIGN SYSTEM)
-       ============================================================ */
-    :root {
-      --bg-primary: #f8f9fa;
-      --bg-surface: #ffffff;
-      --text-primary: #1f2937;
-      --text-secondary: #4b5563;
-      --border-color: #e5e7eb;
-      --primary-color: #2563eb;
-      --primary-hover: #1d4ed8;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
+        // TRATAMENTO DE IMAGENS QUEBRADAS
+        function tratarErroImagem(imgElement, titulo) {
+            if (!imgElement || imgElement.dataset.errorHandled) return;
+            imgElement.dataset.errorHandled = "true";
+            imgElement.src = gerarSvgPlaceholder(titulo);
+        }
+    </script>
 
-    /* Sobrescreve as variáveis quando a classe dark-mode está ativa */
-    body.dark-mode {
-      --bg-primary: #0f172a;
-      --bg-surface: #1e293b;
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --border-color: #334155;
-      --primary-color: #3b82f6;
-      --primary-hover: #60a5fa;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-    }
+    <style>
+        /* ==========================================
+           1. ESTILOS BASE E RESETS
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-    /* ============================================================
-       2. ESTILOS GLOBAIS E ESTRUTURA
-       ============================================================ */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        body {
+            background-color: #f4f6f9;
+            color: #2c3e50;
+            line-height: 1.6;
+            overflow: hidden; /* Trava a rolagem na Splash Screen */
+        }
 
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
+        /* ==========================================
+           1.1 TELA DE INÍCIO INTERATIVA (SPLASH SCREEN)
+           ========================================== */
+        .splash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0f1d 0%, #1b365d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
 
-    /* ============================================================
-       3. CABEÇALHO / NAVBAR
-       ============================================================ */
-    header {
-      background-color: var(--bg-surface);
-      border-bottom: 1px solid var(--border-color);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--shadow);
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
+        .splash-overlay.revelar-site {
+            transform: translateY(100%);
+            opacity: 0;
+        }
 
-    .logo {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--primary-color);
-    }
+        .splash-content {
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
 
-    .theme-toggle-btn {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.3s ease;
-    }
+        .splash-lamp-wrapper {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
 
-    .theme-toggle-btn:hover {
-      border-color: var(--primary-color);
-    }
+        .splash-lamp-icon {
+            font-size: 6.5rem;
+            filter: brightness(0.5) drop-shadow(0 0 10px rgba(251, 191, 36, 0.3));
+            transition: transform 0.3s ease, filter 0.3s ease;
+            display: inline-block;
+        }
 
-    /* ============================================================
-       4. CONTEÚDO PRINCIPAL
-       ============================================================ */
-    main {
-      flex: 1;
-      max-width: 1100px;
-      width: 100%;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
-    }
+        .splash-lamp-icon.crescer-explodir {
+            animation: crescerEBrilhar 0.7s forwards cubic-bezier(0.6, -0.28, 0.735, 0.045);
+        }
 
-    .hero {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
+        @keyframes crescerEBrilhar {
+            0% {
+                transform: scale(1);
+                filter: brightness(0.5) drop-shadow(0 0 10px #fbbf24);
+            }
+            50% {
+                transform: scale(2.5);
+                filter: brightness(1.8) drop-shadow(0 0 40px #fbbf24);
+            }
+            100% {
+                transform: scale(5);
+                filter: brightness(3) drop-shadow(0 0 80px #ffffff);
+                opacity: 0;
+            }
+        }
 
-    .hero h1 {
-      font-size: 2.25rem;
-      margin-bottom: 0.5rem;
-    }
+        .lamp-particle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 100;
+            animation: explodirParticula 0.8s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
 
-    .hero p {
-      color: var(--text-secondary);
-      font-size: 1.1rem;
-    }
+        @keyframes explodirParticula {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.3) rotate(var(--rot));
+            }
+        }
 
-    /* Grade de Cards */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
+        .splash-title {
+            color: #ffffff;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            font-weight: 800;
+        }
 
-    .card {
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-    }
+        .splash-subtitle {
+            color: #00d2ff;
+            font-size: 1.05rem;
+            margin-top: -10px;
+        }
 
-    .card:hover {
-      transform: translateY(-2px);
-    }
+        .btn-comecar {
+            background: linear-gradient(135deg, #00d2ff, #0284c7);
+            color: #0f172a;
+            border: none;
+            padding: 16px 50px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-    .card h3 {
-      margin-bottom: 0.5rem;
-    }
+        .btn-comecar:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.5);
+        }
 
-    .card p {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
+        /* ==========================================
+           2. HEADER E PISCA-PISCA
+           ========================================== */
+        @keyframes piscarLuz {
+            0%, 100% {
+                opacity: 1;
+                filter: drop-shadow(0 0 15px #f59e0b) drop-shadow(0 0 25px #fbbf24);
+                transform: scale(1.1);
+            }
+            20% { opacity: 0.3; filter: none; transform: scale(0.95); }
+            25% { opacity: 1; filter: drop-shadow(0 0 20px #fbbf24); transform: scale(1.15); }
+            55% { opacity: 0.4; filter: none; transform: scale(0.98); }
+            60% { opacity: 1; filter: drop-shadow(0 0 15px #f59e0b); transform: scale(1.05); }
+        }
 
-    /* Formulário de Exemplo */
-    .form-container {
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 500px;
-      margin: 0 auto;
-      box-shadow: var(--shadow);
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
+        .lampada-pisca {
+            display: inline-block;
+            font-size: 2.2rem;
+            animation: piscarLuz 2.5s infinite ease-in-out;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
 
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
+        /* ==========================================
+           3. OVERLAY DE LOGIN / CADASTRO
+           ========================================== */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
+        .auth-overlay.active { display: flex; }
 
-    .form-group input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      outline: none;
-      transition: all 0.3s ease;
-    }
+        .auth-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
 
-    .form-group input:focus {
-      border-color: var(--primary-color);
-    }
+        .btn-fechar-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-    .btn-submit {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: var(--primary-color);
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
+        .auth-header {
+            background: linear-gradient(135deg, #1b365d, #2c5364);
+            color: #ffffff;
+            padding: 25px;
+            text-align: center;
+        }
 
-    .btn-submit:hover {
-      background-color: var(--primary-hover);
-    }
+        .auth-tabs { display: flex; background: #e2e8f0; }
 
-    /* ============================================================
-       5. RODAPÉ
-       ============================================================ */
-    footer {
-      background-color: var(--bg-surface);
-      border-top: 1px solid var(--border-color);
-      text-align: center;
-      padding: 1.5rem;
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-  </style>
+        .auth-tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            font-weight: bold;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .auth-tab-btn.active {
+            background: #ffffff;
+            color: #1b365d;
+            border-bottom: 3px solid #00d2ff;
+        }
+
+        .auth-body { padding: 25px; }
+
+        .auth-form {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .auth-form.active { display: flex; }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .btn-auth {
+            background: #1b365d;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: background 0.3s;
+        }
+
+        .btn-auth:hover { background: #00d2ff; color: #1b365d; }
+
+        .link-esqueci {
+            font-size: 0.85rem;
+            color: #0284c7;
+            text-align: right;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* ==========================================
+           4. NAVEGAÇÃO E BARRAS
+           ========================================== */
+        .user-bar {
+            background: #0f172a;
+            color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .user-bar button {
+            background: #00d2ff;
+            color: #0f172a;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .user-bar button.btn-logout { background: #ef4444; color: #ffffff; }
+
+        header {
+            background: linear-gradient(135deg, #1b365d 0%, #2c5364 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 35px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        header h1 { font-size: 2.5rem; letter-spacing: 1px; text-transform: uppercase; }
+        header h2 { font-size: 1.2rem; color: #00d2ff; margin-top: 5px; }
+
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 16px 22px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            border-bottom: 4px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #1b365d;
+            border-bottom: 4px solid #00d2ff;
+            background-color: #ffffff;
+        }
+
+        .tab-content {
+            display: none;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 35px 20px;
+        }
+
+        .tab-content.active { display: block; }
+
+        /* ==========================================
+           5. GALERIA E CONTEÚDOS
+           ========================================== */
+        .titulo-secao {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #1b365d;
+            margin-bottom: 25px;
+        }
+
+        .galeria-flex {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-foto {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-foto img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-foto figcaption {
+            padding: 14px;
+            font-weight: bold;
+            color: #1b365d;
+        }
+
+        .grid-acoes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .grid-acoes img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .caixa-texto {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            font-size: 1.1rem;
+            margin: 20px auto;
+            max-width: 850px;
+            border-left: 5px solid #1b365d;
+        }
+
+        /* ==========================================
+           6. PERFIL E FOTO DE PERFIL
+           ========================================== */
+        .perfil-card {
+            background: #ffffff;
+            max-width: 550px;
+            margin: 0 auto;
+            border-radius: 16px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .perfil-avatar-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px auto;
+        }
+
+        .perfil-avatar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1b365d, #00d2ff);
+            color: white;
+            font-size: 2.8rem;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 4px solid #ffffff;
+            overflow: hidden;
+        }
+
+        .btn-upload-foto {
+            display: inline-block;
+            background: #00d2ff;
+            color: #0f172a;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: all 0.2s;
+        }
+
+        .btn-upload-foto:hover {
+            background: #38bdf8;
+            transform: scale(1.05);
+        }
+
+        #inputFotoPerfil {
+            display: none;
+        }
+
+        .perfil-badge {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0284c7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* FORMULÁRIO */
+        .form-box {
+            background: #ffffff;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .rating-stars {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px 0 25px 0;
+        }
+
+        .rating-stars input { display: none; }
+
+        .rating-stars label {
+            font-size: 2.2rem;
+            color: #cccccc;
+            cursor: pointer;
+        }
+
+        .rating-stars input:checked ~ label,
+        .rating-stars label:hover,
+        .rating-stars label:hover ~ label {
+            color: #ffb400;
+        }
+
+        .form-group { margin-bottom: 15px; }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #1b365d;
+            color: #ffffff;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .card-agradecimento {
+            background: linear-gradient(135deg, #0f172a, #1b365d);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 35px 25px;
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .card-agradecimento h3 { font-size: 2rem; color: #00d2ff; margin-bottom: 10px; }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #1b365d;
+            color: #ffffff;
+            margin-top: 50px;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
 
-  <header>
-    <div class="logo">MeuSite</div>
-    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar modo escuro">
-      <span id="theme-icon">🌙</span>
-      <span id="theme-text">Modo Escuro</span>
-    </button>
-  </header>
-
-  <main>
-    <section class="hero">
-      <h1>Suporte Completo a Temas</h1>
-      <p>Alterne entre o modo claro e escuro. Sua preferência é salva automaticamente.</p>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h3>⚡ Desempenho</h3>
-        <p>Transições CSS suaves garantem uma troca de tema limpa e agradável aos olhos.</p>
-      </div>
-      <div class="card">
-        <h3>💾 Persistência</h3>
-        <p>A escolha do tema fica salva no localStorage para futuras visitas.</p>
-      </div>
-      <div class="card">
-        <h3>🖥️ Preferência do Sistema</h3>
-        <p>Detecta automaticamente se o seu sistema operacional prefere o tema escuro.</p>
-      </div>
-    </section>
-
-    <section class="form-container">
-      <form onsubmit="event.preventDefault();">
-        <div class="form-group">
-          <label for="name">Nome</label>
-          <input type="text" id="name" placeholder="Digite seu nome">
+    <div id="splashScreen" class="splash-overlay">
+        <div class="splash-content">
+            <div class="splash-lamp-wrapper" onclick="iniciarSite()">
+                <span id="splashLamp" class="splash-lamp-icon">💡</span>
+            </div>
+            <h1 class="splash-title">GAME DO SABER</h1>
+            <p class="splash-subtitle">Colégio Estadual Roberto Langer Junior</p>
+            <button id="btnComecar" class="btn-comecar" onclick="iniciarSite()">Entrar</button>
         </div>
-        <div class="form-group">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" placeholder="seu@email.com">
+    </div>
+
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-card">
+            <button class="btn-fechar-modal" onclick="fecharModalAuth()">&times;</button>
+            <div class="auth-header">
+                <h2><span class="lampada-pisca">💡</span> GAME DO SABER</h2>
+                <p>Colégio Roberto Langer Junior</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" onclick="mostrarFormAuth('formLogin')">Entrar</button>
+                <button class="auth-tab-btn" onclick="mostrarFormAuth('formCadastro')">Cadastrar</button>
+            </div>
+
+            <div class="auth-body">
+                <form id="formLogin" class="auth-form active" onsubmit="fazerLogin(event)">
+                    <input type="email" id="loginEmail" placeholder="Seu E-mail" required>
+                    <input type="password" id="loginSenha" placeholder="Sua Senha" required>
+                    <span class="link-esqueci" onclick="mostrarFormAuth('formReset')">Esqueceu a senha?</span>
+                    <button type="submit" class="btn-auth">Acessar</button>
+                </form>
+
+                <form id="formCadastro" class="auth-form" onsubmit="cadastrarUsuario(event)">
+                    <input type="text" id="cadNome" placeholder="Nome Completo" required>
+                    <input type="text" id="cadTurma" placeholder="Sua Turma (Ex: 1º Ano B)" required>
+                    <input type="email" id="cadEmail" placeholder="Seu E-mail" required>
+                    <input type="password" id="cadSenha" placeholder="Crie uma Senha" required>
+                    <button type="submit" class="btn-auth">Criar Conta</button>
+                </form>
+
+                <form id="formReset" class="auth-form" onsubmit="solicitarCodigoReset(event)">
+                    <p style="font-size:0.85rem; color:#64748b;">Digite seu e-mail para receber o código.</p>
+                    <input type="email" id="resetEmail" placeholder="Seu E-mail" required>
+                    <button type="submit" class="btn-auth">Enviar Código</button>
+                    <span class="link-esqueci" style="text-align:center;" onclick="mostrarFormAuth('formLogin')">Voltar ao Login</span>
+                </form>
+
+                <form id="formCodigoSenha" class="auth-form" onsubmit="redefinirSenhaComCodigo(event)">
+                    <p style="font-size:0.85rem; color:#10b981; font-weight:bold;">Código enviado com sucesso!</p>
+                    <input type="text" id="inputCodigo" placeholder="Digite o Código de 6 dígitos" required>
+                    <input type="password" id="novaSenhaInput" placeholder="Sua Nova Senha" required>
+                    <button type="submit" class="btn-auth">Confirmar Senha</button>
+                </form>
+            </div>
         </div>
-        <button type="submit" class="btn-submit">Enviar</button>
-      </form>
+    </div>
+
+    <div id="userBar" class="user-bar">
+        <span id="userInfoText">Modo Convidado (Navegação Livre)</span>
+        <button id="userBarBtn" onclick="abrirModalAuth()">Fazer Login</button>
+    </div>
+
+    <header>
+        <h1><span class="lampada-pisca">💡</span> GAME DO SABER <span class="lampada-pisca">💡</span></h1>
+        <h2>Colégio Estadual Roberto Langer Junior</h2>
+        <p>NOSSA ESCOLA, NOSSO COMPROMISSO</p>
+    </header>
+
+    <nav class="tabs-nav">
+        <button class="tab-btn active" onclick="trocarAba(event, 'aba-escola')">Nossa Escola</button>
+        <button class="tab-btn" onclick="trocarAba(event, 'aba-conscientizacao')">Conscientização</button>
+        <button class="tab-btn" onclick="trocarAba(event, 'aba-acoes')">Ações e Galeria</button>
+        <button class="tab-btn" onclick="trocarAba(event, 'aba-propostas')">Avaliação & Ideias</button>
+        <button class="tab-btn" onclick="trocarAba(event, 'aba-perfil')">Meu Perfil</button>
+    </nav>
+
+    <main id="aba-escola" class="tab-content active">
+        <h3 class="titulo-secao">Conheça a Nossa Estrutura</h3>
+        <div class="galeria-flex">
+            <figure class="card-foto">
+                <img src="logoescola.jpeg" alt="Logo da Escola" onerror="tratarErroImagem(this, 'Logo da Escola')">
+                <figcaption>Logo Oficial da Escola</figcaption>
+            </figure>
+            <figure class="card-foto">
+                <img src="frenteescola.jpeg" alt="Frente da Escola" onerror="tratarErroImagem(this, 'Fachada da Escola')">
+                <figcaption>Fachada Principal</figcaption>
+            </figure>
+        </div>
+    </main>
+
+    <section id="aba-conscientizacao" class="tab-content">
+        <h3 class="titulo-secao">O Cuidado com o Patrimônio</h3>
+        <div class="galeria-flex">
+            <figure class="card-foto">
+                <img src="sala-de-aula.jpeg" alt="Sala de Aula" onerror="tratarErroImagem(this, 'Sala de Aula')">
+                <figcaption>Nossa Sala de Aula</figcaption>
+            </figure>
+            <figure class="card-foto">
+                <img src="days.jpeg" alt="Antes e Depois - Preservação do Patrimônio Escolar" onerror="tratarErroImagem(this, 'Antes e Depois - Preservação')">
+                <figcaption><b>Antes e Depois - Preservação do Patrimônio Escolar</b></figcaption>
+            </figure>
+        </div>
+        <div class="caixa-texto">
+            <p>O cuidado com o patrimônio da escola é responsabilidade de todos os estudantes e funcionários. 
+            Os bens duráveis são importantes para o desenvolvimento dos estudantes e geram um ambiente melhor para todos os envolvidos.</p>
+        </div>
     </section>
-  </main>
 
-  <footer>
-    <p>&copy; 2026 - Todos os direitos reservados.</p>
-  </footer>
+    <section id="aba-acoes" class="tab-content">
+        <h3 class="titulo-secao">O que nós podemos fazer para tornar nossa escola ainda melhor?</h3>
+        <p style="text-align: center; margin-bottom: 20px;">Confira abaixo a sequência de ações para a preservação do espaço escolar:</p>
+        <div class="grid-acoes">
+            <img src="1.png" alt="Ação 1" onerror="tratarErroImagem(this, 'Ação 1')">
+            <img src="2.png" alt="Ação 2" onerror="tratarErroImagem(this, 'Ação 2')">
+            <img src="3.png" alt="Ação 3" onerror="tratarErroImagem(this, 'Ação 3')">
+            <img src="4.png" alt="Ação 4" onerror="tratarErroImagem(this, 'Ação 4')">
+            <img src="5.png" alt="Ação 5" onerror="tratarErroImagem(this, 'Ação 5')">
+            <img src="6.png" alt="Ação 6" onerror="tratarErroImagem(this, 'Ação 6')">
+        </div>
+    </section>
 
-  <script>
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-    const themeText = document.getElementById('theme-text');
+    <section id="aba-propostas" class="tab-content">
+        <div class="form-box">
+            <h3 class="titulo-secao">Deixe sua Avaliação e Proposta</h3>
+            <p style="text-align: center; color: #666; margin-bottom: 15px;">Dê sua nota para a escola e envie ideias diretamente para a nossa equipe!</p>
+            
+            <form action="https://formsubmit.co/eduardo.miranda.carlos@escola.pr.gov.br" method="POST">
+                <input type="hidden" name="_subject" value="Nova Proposta - Game do Saber">
+                <input type="hidden" name="_captcha" value="false">
 
-    // 1. Obtém o tema salvo ou a preferência do sistema operacional
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                <div class="rating-stars">
+                    <input type="radio" id="st5" name="Avaliação" value="5 Estrelas" required><label for="st5">★</label>
+                    <input type="radio" id="st4" name="Avaliação" value="4 Estrelas"><label for="st4">★</label>
+                    <input type="radio" id="st3" name="Avaliação" value="3 Estrelas"><label for="st3">★</label>
+                    <input type="radio" id="st2" name="Avaliação" value="2 Estrelas"><label for="st2">★</label>
+                    <input type="radio" id="st1" name="Avaliação" value="1 Estrela"><label for="st1">★</label>
+                </div>
 
-    // Funções auxiliares para atualizar o estado visual
-    function setDarkMode() {
-      document.body.classList.add('dark-mode');
-      themeIcon.textContent = '☀️';
-      themeText.textContent = 'Modo Claro';
-    }
+                <div class="form-group">
+                    <input type="text" id="propNome" name="Nome do Aluno" placeholder="Seu Nome" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="propTurma" name="Turma" placeholder="Sua Turma" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="Proposta / Ideia" rows="5" placeholder="Escreva aqui sua ideia ou proposta..." required></textarea>
+                </div>
 
-    function setLightMode() {
-      document.body.classList.remove('dark-mode');
-      themeIcon.textContent = '🌙';
-      themeText.textContent = 'Modo Escuro';
-    }
+                <button type="submit" class="btn-submit">Enviar Proposta por E-mail</button>
+            </form>
+        </div>
 
-    // 2. Aplica o tema correto na inicialização
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      setDarkMode();
-    } else {
-      setLightMode();
-    }
+        <div class="card-agradecimento">
+            <h3><span class="lampada-pisca">💡</span> OBRIGADO POR PARTICIPAR!</h3>
+            <p>Sua voz e sua proposta são fundamentais para construirmos uma escola cada vez melhor. Juntos, estamos transformando o Colégio Estadual Roberto Langer Junior!</p>
+        </div>
+    </section>
 
-    // 3. Evento de alternância ao clicar no botão
-    themeToggleBtn.addEventListener('click', () => {
-      const isDark = document.body.classList.contains('dark-mode');
+    <section id="aba-perfil" class="tab-content">
+        <h3 class="titulo-secao">Meu Perfil</h3>
+        <div id="perfilConteudo" class="perfil-card"></div>
+    </section>
 
-      if (isDark) {
-        setLightMode();
-        localStorage.setItem('theme', 'light');
-      } else {
-        setDarkMode();
-        localStorage.setItem('theme', 'dark');
-      }
-    });
-  </script>
+    <footer>
+        <p>&copy; 2026 GAME DO SABER - Colégio Estadual Roberto Langer Junior | Todos os direitos reservados.</p>
+    </footer>
 
+    <script>
+        let codigoGerado = null;
+        let emailParaReset = '';
+        let inicioExecutado = false;
+
+        // ANIMACÃO DA TELA INICIAL
+        function iniciarSite() {
+            if (inicioExecutado) return;
+            inicioExecutado = true;
+
+            const lamp = document.getElementById('splashLamp');
+            const splash = document.getElementById('splashScreen');
+            const btn = document.getElementById('btnComecar');
+
+            if (btn) btn.style.pointerEvents = 'none';
+            if (lamp) lamp.classList.add('crescer-explodir');
+
+            criarExplosaoLampadas();
+
+            setTimeout(() => {
+                document.body.style.overflow = 'auto';
+                if (splash) {
+                    splash.classList.add('revelar-site');
+                    setTimeout(() => splash.style.display = 'none', 800);
+                }
+            }, 650);
+        }
+
+        function criarExplosaoLampadas() {
+            const splash = document.getElementById('splashScreen');
+            if (!splash) return;
+
+            for (let i = 0; i < 35; i++) {
+                const particle = document.createElement('span');
+                particle.classList.add('lamp-particle');
+                particle.innerText = '💡';
+
+                const angulo = Math.random() * Math.PI * 2;
+                const distancia = 200 + Math.random() * 400;
+                const dx = (Math.cos(angulo) * distancia) + 'px';
+                const dy = (Math.sin(angulo) * distancia) + 'px';
+                const rot = (Math.random() * 720 - 360) + 'deg';
+
+                particle.style.setProperty('--dx', dx);
+                particle.style.setProperty('--dy', dy);
+                particle.style.setProperty('--rot', rot);
+
+                splash.appendChild(particle);
+            }
+        }
+
+        // BANCO LOCAL DE USUÁRIOS COM TRATAMENTO DE ERRO
+        function obterUsuarios() {
+            try {
+                let u = localStorage.getItem('game_saber_users');
+                if(!u) {
+                    let defaultUsers = {
+                        'eduardo.miranda.carlos@escola.pr.gov.br': {
+                            nome: 'Eduardo Miranda',
+                            turma: 'Professor / Admin',
+                            senha: '123',
+                            avatar: null
+                        },
+                        'ceo@escola.pr.gov.br': {
+                            nome: 'CEO - Direção Geral',
+                            turma: 'Direção Executiva',
+                            senha: 'CEO@Game2026',
+                            avatar: null
+                        }
+                    };
+                    localStorage.setItem('game_saber_users', JSON.stringify(defaultUsers));
+                    return defaultUsers;
+                }
+                return JSON.parse(u);
+            } catch(e) {
+                return {
+                    'eduardo.miranda.carlos@escola.pr.gov.br': { nome: 'Eduardo Miranda', turma: 'Professor / Admin', senha: '123', avatar: null }
+                };
+            }
+        }
+
+        // UPLOAD E COMPRESSÃO DE FOTO DE PERFIL
+        function alterarFotoPerfil(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const maxDim = 150;
+
+                        if (width > height) {
+                            if (width > maxDim) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            }
+                        } else {
+                            if (height > maxDim) {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const fotoOtimizada = canvas.toDataURL('image/jpeg', 0.8);
+
+                        let usuarioLogado = null;
+                        try {
+                            usuarioLogado = JSON.parse(sessionStorage.getItem('usuario_logado'));
+                        } catch(err){}
+
+                        if (usuarioLogado) {
+                            usuarioLogado.avatar = fotoOtimizada;
+                            try {
+                                sessionStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
+                                let users = obterUsuarios();
+                                if (users[usuarioLogado.email]) {
+                                    users[usuarioLogado.email].avatar = fotoOtimizada;
+                                    localStorage.setItem('game_saber_users', JSON.stringify(users));
+                                }
+                                atualizarInterfaceUsuario();
+                            } catch(err) {
+                                alert("Erro ao salvar a foto de perfil.");
+                            }
+                        }
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // TROCA DE ABAS NAVEGAÇÃO
+        function trocarAba(evt, idAba) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(idAba).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // MODAL DE AUTENTICAÇÃO
+        function abrirModalAuth() {
+            document.getElementById('authOverlay').classList.add('active');
+        }
+
+        function fecharModalAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+        }
+
+        function mostrarFormAuth(formId) {
+            const forms = document.querySelectorAll('.auth-form');
+            forms.forEach(f => f.classList.remove('active'));
+
+            const targetForm = document.getElementById(formId);
+            if(targetForm) targetForm.classList.add('active');
+
+            const tabs = document.querySelectorAll('.auth-tab-btn');
+            tabs.forEach(t => t.classList.remove('active'));
+            if (formId === 'formLogin' && tabs[0]) tabs[0].classList.add('active');
+            if (formId === 'formCadastro' && tabs[1]) tabs[1].classList.add('active');
+        }
+
+        // AUTENTICAÇÃO E CADASTRO
+        function fazerLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const senha = document.getElementById('loginSenha').value;
+
+            const users = obterUsuarios();
+            if (users[email] && users[email].senha === senha) {
+                const userObj = { email, ...users[email] };
+                sessionStorage.setItem('usuario_logado', JSON.stringify(userObj));
+                fecharModalAuth();
+                atualizarInterfaceUsuario();
+                alert('Login realizado com sucesso!');
+            } else {
+                alert('E-mail ou senha incorretos.');
+            }
+        }
+
+        function cadastrarUsuario(event) {
+            event.preventDefault();
+            const nome = document.getElementById('cadNome').value.trim();
+            const turma = document.getElementById('cadTurma').value.trim();
+            const email = document.getElementById('cadEmail').value.trim();
+            const senha = document.getElementById('cadSenha').value;
+
+            const users = obterUsuarios();
+            if (users[email]) {
+                alert('Este e-mail já está cadastrado!');
+                return;
+            }
+
+            users[email] = { nome, turma, senha, avatar: null };
+            localStorage.setItem('game_saber_users', JSON.stringify(users));
+
+            const userObj = { email, nome, turma, senha, avatar: null };
+            sessionStorage.setItem('usuario_logado', JSON.stringify(userObj));
+
+            fecharModalAuth();
+            atualizarInterfaceUsuario();
+            alert('Conta criada com sucesso!');
+        }
+
+        function solicitarCodigoReset(event) {
+            event.preventDefault();
+            const email = document.getElementById('resetEmail').value.trim();
+            const users = obterUsuarios();
+
+            if (!users[email]) {
+                alert('E-mail não encontrado no sistema.');
+                return;
+            }
+
+            emailParaReset = email;
+            codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
+            alert(`Seu código de verificação é: ${codigoGerado}`);
+            mostrarFormAuth('formCodigoSenha');
+        }
+
+        function redefinirSenhaComCodigo(event) {
+            event.preventDefault();
+            const codigoInput = document.getElementById('inputCodigo').value.trim();
+            const novaSenha = document.getElementById('novaSenhaInput').value;
+
+            if (codigoInput !== codigoGerado) {
+                alert('Código incorreto!');
+                return;
+            }
+
+            const users = obterUsuarios();
+            if (users[emailParaReset]) {
+                users[emailParaReset].senha = novaSenha;
+                localStorage.setItem('game_saber_users', JSON.stringify(users));
+                alert('Senha redefinida com sucesso! Faça login com a nova senha.');
+                mostrarFormAuth('formLogin');
+            }
+        }
+
+        // GERENCIAMENTO DA INTERFACE E PERFIL
+        function atualizarInterfaceUsuario() {
+            let user = null;
+            try {
+                user = JSON.parse(sessionStorage.getItem('usuario_logado'));
+            } catch(e) {}
+
+            const userInfoText = document.getElementById('userInfoText');
+            const userBarBtn = document.getElementById('userBarBtn');
+
+            if (user) {
+                userInfoText.textContent = `Olá, ${user.nome} (${user.turma})`;
+                userBarBtn.textContent = 'Sair';
+                userBarBtn.className = 'btn-logout';
+                userBarBtn.onclick = fazerLogout;
+
+                const propNome = document.getElementById('propNome');
+                const propTurma = document.getElementById('propTurma');
+                if (propNome) propNome.value = user.nome;
+                if (propTurma) propTurma.value = user.turma;
+            } else {
+                userInfoText.textContent = 'Modo Convidado (Navegação Livre)';
+                userBarBtn.textContent = 'Fazer Login';
+                userBarBtn.className = '';
+                userBarBtn.onclick = abrirModalAuth;
+            }
+
+            renderizarPerfil();
+        }
+
+        function renderizarPerfil() {
+            const perfilContainer = document.getElementById('perfilConteudo');
+            if (!perfilContainer) return;
+
+            let user = null;
+            try {
+                user = JSON.parse(sessionStorage.getItem('usuario_logado'));
+            } catch(e) {}
+
+            if (user) {
+                const avatarHTML = user.avatar 
+                    ? `<img src="${user.avatar}" alt="Foto de Perfil" class="perfil-avatar">` 
+                    : `<div class="perfil-avatar">${user.nome.charAt(0).toUpperCase()}</div>`;
+
+                perfilContainer.innerHTML = `
+                    <div class="perfil-avatar-wrapper">
+                        ${avatarHTML}
+                    </div>
+                    <label for="inputFotoPerfil" class="btn-upload-foto">📷 Alterar Foto</label>
+                    <input type="file" id="inputFotoPerfil" accept="image/*" onchange="alterarFotoPerfil(this)">
+                    <h2 style="margin-top: 15px; color: #1b365d;">${user.nome}</h2>
+                    <p class="perfil-badge">${user.turma}</p>
+                    <p style="margin-top: 10px; font-size: 0.9rem; color: #64748b;">${user.email}</p>
+                `;
+            } else {
+                perfilContainer.innerHTML = `
+                    <div class="perfil-avatar-wrapper">
+                        <div class="perfil-avatar">👤</div>
+                    </div>
+                    <h2 style="color: #1b365d; margin-top: 15px;">Modo Convidado</h2>
+                    <p style="margin: 10px 0; color: #64748b;">Faça login para salvar suas informações e personalizar seu perfil.</p>
+                    <button class="btn-auth" style="margin-top: 15px;" onclick="abrirModalAuth()">Fazer Login / Cadastrar</button>
+                `;
+            }
+        }
+
+        function fazerLogout() {
+            sessionStorage.removeItem('usuario_logado');
+            atualizarInterfaceUsuario();
+            alert('Você saiu da sua conta.');
+        }
+
+        // INICIALIZAÇÃO
+        window.addEventListener('DOMContentLoaded', () => {
+            obterUsuarios();
+            atualizarInterfaceUsuario();
+        });
+    </script>
 </body>
 </html>
