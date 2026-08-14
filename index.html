@@ -6,7 +6,7 @@
     <title>GAME DO SABER - Colégio Estadual Roberto Langer Junior</title>
     
     <script>
-        // GERADOR DE PAINÉIS SVG OFFLINE (Não depende de internet nem sofre bloqueio de rede escolar)
+        // GERADOR DE PAINÉIS SVG OFFLINE
         function gerarSvgPlaceholder(titulo) {
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="350" viewBox="0 0 600 350">
                 <rect width="100%" height="100%" fill="#1b365d"/>
@@ -41,10 +41,66 @@
             color: #2c3e50;
             line-height: 1.6;
             overflow: hidden; /* Trava a rolagem na Splash Screen */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* ==========================================
-           1.1 TELA DE INÍCIO INTERATIVA (SPLASH SCREEN)
+           1.1 MODO ESCURO (DARK MODE)
+           ========================================== */
+        body.dark-mode {
+            background-color: #0b0f19;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .caixa-texto,
+        body.dark-mode .card-foto,
+        body.dark-mode .perfil-card,
+        body.dark-mode .form-box,
+        body.dark-mode .auth-card {
+            background-color: #1e293b;
+            color: #f8fafc;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        body.dark-mode .card-foto figcaption,
+        body.dark-mode .titulo-secao {
+            color: #38bdf8;
+        }
+
+        body.dark-mode .tabs-nav {
+            background-color: #1e293b;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .tab-btn {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .tab-btn.active {
+            color: #00d2ff;
+            background-color: #1e293b;
+            border-bottom-color: #00d2ff;
+        }
+
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group textarea,
+        body.dark-mode .auth-form input {
+            background-color: #0f172a;
+            color: #f8fafc;
+            border-color: #334155;
+        }
+
+        body.dark-mode .user-bar {
+            background: #020617;
+        }
+
+        body.dark-mode footer {
+            background-color: #0b0f19;
+            border-top: 1px solid #1e293b;
+        }
+
+        /* ==========================================
+           1.2 TELA DE INÍCIO INTERATIVA (SPLASH SCREEN)
            ========================================== */
         .splash-overlay {
             position: fixed;
@@ -315,7 +371,29 @@
             font-size: 0.9rem;
         }
 
-        .user-bar button {
+        .user-bar-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00d2ff;
+            border: 1px solid #00d2ff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .btn-theme-toggle:hover {
+            background: #00d2ff;
+            color: #0f172a;
+        }
+
+        .user-bar button.btn-user {
             background: #00d2ff;
             color: #0f172a;
             border: none;
@@ -347,6 +425,7 @@
             top: 0;
             z-index: 1000;
             flex-wrap: wrap;
+            transition: background-color 0.3s ease;
         }
 
         .tab-btn {
@@ -358,6 +437,7 @@
             color: #555;
             cursor: pointer;
             border-bottom: 4px solid transparent;
+            transition: all 0.2s;
         }
 
         .tab-btn.active {
@@ -405,6 +485,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: background-color 0.3s ease;
         }
 
         .card-foto img {
@@ -445,6 +526,7 @@
             margin: 20px auto;
             max-width: 850px;
             border-left: 5px solid #1b365d;
+            transition: background-color 0.3s ease;
         }
 
         /* ==========================================
@@ -458,6 +540,7 @@
             padding: 35px;
             text-align: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: background-color 0.3s ease;
         }
 
         .perfil-avatar-wrapper {
@@ -493,7 +576,7 @@
             font-size: 0.85rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 5px;
+            margin-top: 15px;
             transition: all 0.2s;
         }
 
@@ -525,6 +608,7 @@
             padding: 35px;
             border-radius: 12px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: background-color 0.3s ease;
         }
 
         .rating-stars {
@@ -590,6 +674,7 @@
             color: #ffffff;
             margin-top: 50px;
             font-size: 0.9rem;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
@@ -654,7 +739,10 @@
 
     <div id="userBar" class="user-bar">
         <span id="userInfoText">Modo Convidado (Navegação Livre)</span>
-        <button id="userBarBtn" onclick="abrirModalAuth()">Fazer Login</button>
+        <div class="user-bar-controls">
+            <button id="themeToggleBtn" class="btn-theme-toggle" onclick="alternarModoEscuro()">🌙 Modo Escuro</button>
+            <button id="userBarBtn" class="btn-user" onclick="abrirModalAuth()">Fazer Login</button>
+        </div>
     </div>
 
     <header>
@@ -767,7 +855,33 @@
         let emailParaReset = '';
         let inicioExecutado = false;
 
-        // ANIMACÃO DA TELA INICIAL
+        // 1. GERENCIAMENTO DE MODO ESCURO
+        function alternarModoEscuro() {
+            document.body.classList.toggle('dark-mode');
+            const ehEscuro = document.body.classList.contains('dark-mode');
+            localStorage.setItem('game_saber_theme', ehEscuro ? 'dark' : 'light');
+            atualizarBotaoTema();
+        }
+
+        function atualizarBotaoTema() {
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) {
+                const ehEscuro = document.body.classList.contains('dark-mode');
+                btn.innerHTML = ehEscuro ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+            }
+        }
+
+        function carregarTemaSalvo() {
+            const savedTheme = localStorage.getItem('game_saber_theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.body.classList.add('dark-mode');
+            }
+            atualizarBotaoTema();
+        }
+
+        // 2. ANIMACÃO DA TELA INICIAL
         function iniciarSite() {
             if (inicioExecutado) return;
             inicioExecutado = true;
@@ -813,7 +927,19 @@
             }
         }
 
-        // BANCO LOCAL DE USUÁRIOS COM TRATAMENTO DE ERRO
+        // 3. NAVEGAÇÃO DE ABAS
+        function trocarAba(evt, abaId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(abaId).classList.add('active');
+            if (evt) evt.currentTarget.classList.add('active');
+        }
+
+        // 4. BANCO LOCAL DE USUÁRIOS
         function obterUsuarios() {
             try {
                 let u = localStorage.getItem('game_saber_users');
@@ -843,7 +969,116 @@
             }
         }
 
-        // UPLOAD E COMPRESSÃO DE FOTO DE PERFIL
+        // 5. GERENCIAMENTO DE SESSÃO E LOGIN
+        function abrirModalAuth() {
+            document.getElementById('authOverlay').classList.add('active');
+        }
+
+        function fecharModalAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+        }
+
+        function mostrarFormAuth(formId) {
+            const forms = document.querySelectorAll('.auth-form');
+            forms.forEach(f => f.classList.remove('active'));
+            document.getElementById(formId).classList.add('active');
+
+            const tabBtns = document.querySelectorAll('.auth-tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+
+            if(formId === 'formLogin') tabBtns[0].classList.add('active');
+            if(formId === 'formCadastro') tabBtns[1].classList.add('active');
+        }
+
+        function fazerLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const senha = document.getElementById('loginSenha').value;
+
+            const users = obterUsuarios();
+
+            if (users[email] && users[email].senha === senha) {
+                const userSession = {
+                    email: email,
+                    nome: users[email].nome,
+                    turma: users[email].turma,
+                    avatar: users[email].avatar || null
+                };
+                sessionStorage.setItem('usuario_logado', JSON.stringify(userSession));
+                fecharModalAuth();
+                atualizarInterfaceUsuario();
+                alert('Login realizado com sucesso!');
+            } else {
+                alert('E-mail ou senha incorretos.');
+            }
+        }
+
+        function cadastrarUsuario(e) {
+            e.preventDefault();
+            const nome = document.getElementById('cadNome').value.trim();
+            const turma = document.getElementById('cadTurma').value.trim();
+            const email = document.getElementById('cadEmail').value.trim().toLowerCase();
+            const senha = document.getElementById('cadSenha').value;
+
+            const users = obterUsuarios();
+
+            if (users[email]) {
+                alert('Este e-mail já está cadastrado!');
+                return;
+            }
+
+            users[email] = { nome, turma, senha, avatar: null };
+            localStorage.setItem('game_saber_users', JSON.stringify(users));
+
+            const userSession = { email, nome, turma, avatar: null };
+            sessionStorage.setItem('usuario_logado', JSON.stringify(userSession));
+
+            fecharModalAuth();
+            atualizarInterfaceUsuario();
+            alert('Conta criada com sucesso!');
+        }
+
+        function fazerLogout() {
+            sessionStorage.removeItem('usuario_logado');
+            atualizarInterfaceUsuario();
+            alert('Você saiu da sua conta.');
+        }
+
+        function solicitarCodigoReset(e) {
+            e.preventDefault();
+            emailParaReset = document.getElementById('resetEmail').value.trim().toLowerCase();
+            const users = obterUsuarios();
+
+            if (!users[emailParaReset]) {
+                alert('E-mail não encontrado no sistema.');
+                return;
+            }
+
+            codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
+            alert(`[SIMULAÇÃO] Seu código de recuperação é: ${codigoGerado}`);
+            mostrarFormAuth('formCodigoSenha');
+        }
+
+        function redefinirSenhaComCodigo(e) {
+            e.preventDefault();
+            const codigo = document.getElementById('inputCodigo').value.trim();
+            const novaSenha = document.getElementById('novaSenhaInput').value;
+
+            if (codigo !== codigoGerado) {
+                alert('Código incorreto!');
+                return;
+            }
+
+            const users = obterUsuarios();
+            if (users[emailParaReset]) {
+                users[emailParaReset].senha = novaSenha;
+                localStorage.setItem('game_saber_users', JSON.stringify(users));
+                alert('Senha alterada com sucesso! Faça login novamente.');
+                mostrarFormAuth('formLogin');
+            }
+        }
+
+        // 6. UPLOAD DE FOTO DE PERFIL
         function alterarFotoPerfil(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
@@ -883,17 +1118,14 @@
 
                         if (usuarioLogado) {
                             usuarioLogado.avatar = fotoOtimizada;
-                            try {
-                                sessionStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
-                                let users = obterUsuarios();
-                                if (users[usuarioLogado.email]) {
-                                    users[usuarioLogado.email].avatar = fotoOtimizada;
-                                    localStorage.setItem('game_saber_users', JSON.stringify(users));
-                                }
-                                atualizarInterfaceUsuario();
-                            } catch(err) {
-                                alert("Erro ao salvar a foto de perfil.");
+                            sessionStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
+                            
+                            let users = obterUsuarios();
+                            if (users[usuarioLogado.email]) {
+                                users[usuarioLogado.email].avatar = fotoOtimizada;
+                                localStorage.setItem('game_saber_users', JSON.stringify(users));
                             }
+                            atualizarInterfaceUsuario();
                         }
                     };
                     img.src = e.target.result;
@@ -902,192 +1134,66 @@
             }
         }
 
-        // TROCA DE ABAS NAVEGAÇÃO
-        function trocarAba(evt, idAba) {
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => content.classList.remove('active'));
-
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            tabBtns.forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(idAba).classList.add('active');
-            evt.currentTarget.classList.add('active');
-        }
-
-        // MODAL DE AUTENTICAÇÃO
-        function abrirModalAuth() {
-            document.getElementById('authOverlay').classList.add('active');
-        }
-
-        function fecharModalAuth() {
-            document.getElementById('authOverlay').classList.remove('active');
-        }
-
-        function mostrarFormAuth(formId) {
-            const forms = document.querySelectorAll('.auth-form');
-            forms.forEach(f => f.classList.remove('active'));
-
-            const targetForm = document.getElementById(formId);
-            if(targetForm) targetForm.classList.add('active');
-
-            const tabs = document.querySelectorAll('.auth-tab-btn');
-            tabs.forEach(t => t.classList.remove('active'));
-            if (formId === 'formLogin' && tabs[0]) tabs[0].classList.add('active');
-            if (formId === 'formCadastro' && tabs[1]) tabs[1].classList.add('active');
-        }
-
-        // AUTENTICAÇÃO E CADASTRO
-        function fazerLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const senha = document.getElementById('loginSenha').value;
-
-            const users = obterUsuarios();
-            if (users[email] && users[email].senha === senha) {
-                const userObj = { email, ...users[email] };
-                sessionStorage.setItem('usuario_logado', JSON.stringify(userObj));
-                fecharModalAuth();
-                atualizarInterfaceUsuario();
-                alert('Login realizado com sucesso!');
-            } else {
-                alert('E-mail ou senha incorretos.');
-            }
-        }
-
-        function cadastrarUsuario(event) {
-            event.preventDefault();
-            const nome = document.getElementById('cadNome').value.trim();
-            const turma = document.getElementById('cadTurma').value.trim();
-            const email = document.getElementById('cadEmail').value.trim();
-            const senha = document.getElementById('cadSenha').value;
-
-            const users = obterUsuarios();
-            if (users[email]) {
-                alert('Este e-mail já está cadastrado!');
-                return;
-            }
-
-            users[email] = { nome, turma, senha, avatar: null };
-            localStorage.setItem('game_saber_users', JSON.stringify(users));
-
-            const userObj = { email, nome, turma, senha, avatar: null };
-            sessionStorage.setItem('usuario_logado', JSON.stringify(userObj));
-
-            fecharModalAuth();
-            atualizarInterfaceUsuario();
-            alert('Conta criada com sucesso!');
-        }
-
-        function solicitarCodigoReset(event) {
-            event.preventDefault();
-            const email = document.getElementById('resetEmail').value.trim();
-            const users = obterUsuarios();
-
-            if (!users[email]) {
-                alert('E-mail não encontrado no sistema.');
-                return;
-            }
-
-            emailParaReset = email;
-            codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
-            alert(`Seu código de verificação é: ${codigoGerado}`);
-            mostrarFormAuth('formCodigoSenha');
-        }
-
-        function redefinirSenhaComCodigo(event) {
-            event.preventDefault();
-            const codigoInput = document.getElementById('inputCodigo').value.trim();
-            const novaSenha = document.getElementById('novaSenhaInput').value;
-
-            if (codigoInput !== codigoGerado) {
-                alert('Código incorreto!');
-                return;
-            }
-
-            const users = obterUsuarios();
-            if (users[emailParaReset]) {
-                users[emailParaReset].senha = novaSenha;
-                localStorage.setItem('game_saber_users', JSON.stringify(users));
-                alert('Senha redefinida com sucesso! Faça login com a nova senha.');
-                mostrarFormAuth('formLogin');
-            }
-        }
-
-        // GERENCIAMENTO DA INTERFACE E PERFIL
+        // 7. ATUALIZAÇÃO DA INTERFACE DO USUÁRIO & PERFIL
         function atualizarInterfaceUsuario() {
-            let user = null;
+            let usuarioLogado = null;
             try {
-                user = JSON.parse(sessionStorage.getItem('usuario_logado'));
-            } catch(e) {}
+                usuarioLogado = JSON.parse(sessionStorage.getItem('usuario_logado'));
+            } catch(e){}
 
             const userInfoText = document.getElementById('userInfoText');
             const userBarBtn = document.getElementById('userBarBtn');
+            const perfilConteudo = document.getElementById('perfilConteudo');
 
-            if (user) {
-                userInfoText.textContent = `Olá, ${user.nome} (${user.turma})`;
-                userBarBtn.textContent = 'Sair';
-                userBarBtn.className = 'btn-logout';
+            // Preenche o formulário da proposta com os dados do usuário, se logado
+            if (usuarioLogado) {
+                document.getElementById('propNome').value = usuarioLogado.nome;
+                document.getElementById('propTurma').value = usuarioLogado.turma;
+
+                userInfoText.innerText = `Olá, ${usuarioLogado.nome} (${usuarioLogado.turma})`;
+                userBarBtn.innerText = 'Sair';
+                userBarBtn.classList.add('btn-logout');
                 userBarBtn.onclick = fazerLogout;
 
-                const propNome = document.getElementById('propNome');
-                const propTurma = document.getElementById('propTurma');
-                if (propNome) propNome.value = user.nome;
-                if (propTurma) propTurma.value = user.turma;
-            } else {
-                userInfoText.textContent = 'Modo Convidado (Navegação Livre)';
-                userBarBtn.textContent = 'Fazer Login';
-                userBarBtn.className = '';
-                userBarBtn.onclick = abrirModalAuth;
-            }
+                const inicial = usuarioLogado.nome.charAt(0).toUpperCase();
+                const avatarHTML = usuarioLogado.avatar 
+                    ? `<img src="${usuarioLogado.avatar}" class="perfil-avatar" alt="Foto de perfil">`
+                    : `<div class="perfil-avatar">${inicial}</div>`;
 
-            renderizarPerfil();
-        }
-
-        function renderizarPerfil() {
-            const perfilContainer = document.getElementById('perfilConteudo');
-            if (!perfilContainer) return;
-
-            let user = null;
-            try {
-                user = JSON.parse(sessionStorage.getItem('usuario_logado'));
-            } catch(e) {}
-
-            if (user) {
-                const avatarHTML = user.avatar 
-                    ? `<img src="${user.avatar}" alt="Foto de Perfil" class="perfil-avatar">` 
-                    : `<div class="perfil-avatar">${user.nome.charAt(0).toUpperCase()}</div>`;
-
-                perfilContainer.innerHTML = `
+                perfilConteudo.innerHTML = `
                     <div class="perfil-avatar-wrapper">
                         ${avatarHTML}
                     </div>
                     <label for="inputFotoPerfil" class="btn-upload-foto">📷 Alterar Foto</label>
                     <input type="file" id="inputFotoPerfil" accept="image/*" onchange="alterarFotoPerfil(this)">
-                    <h2 style="margin-top: 15px; color: #1b365d;">${user.nome}</h2>
-                    <p class="perfil-badge">${user.turma}</p>
-                    <p style="margin-top: 10px; font-size: 0.9rem; color: #64748b;">${user.email}</p>
+                    
+                    <h2 style="margin-top:15px; color:#1b365d;">${usuarioLogado.nome}</h2>
+                    <p style="color:#64748b; font-weight:bold;">${usuarioLogado.email}</p>
+                    <span class="perfil-badge">${usuarioLogado.turma}</span>
                 `;
             } else {
-                perfilContainer.innerHTML = `
+                document.getElementById('propNome').value = '';
+                document.getElementById('propTurma').value = '';
+
+                userInfoText.innerText = 'Modo Convidado (Navegação Livre)';
+                userBarBtn.innerText = 'Fazer Login';
+                userBarBtn.classList.remove('btn-logout');
+                userBarBtn.onclick = abrirModalAuth;
+
+                perfilConteudo.innerHTML = `
                     <div class="perfil-avatar-wrapper">
                         <div class="perfil-avatar">👤</div>
                     </div>
-                    <h2 style="color: #1b365d; margin-top: 15px;">Modo Convidado</h2>
-                    <p style="margin: 10px 0; color: #64748b;">Faça login para salvar suas informações e personalizar seu perfil.</p>
-                    <button class="btn-auth" style="margin-top: 15px;" onclick="abrirModalAuth()">Fazer Login / Cadastrar</button>
+                    <h2>Visitante</h2>
+                    <p style="color:#64748b; margin-top:10px;">Você está navegando como convidado.</p>
+                    <button class="btn-auth" style="margin-top:20px; max-width:200px;" onclick="abrirModalAuth()">Entrar na Conta</button>
                 `;
             }
         }
 
-        function fazerLogout() {
-            sessionStorage.removeItem('usuario_logado');
-            atualizarInterfaceUsuario();
-            alert('Você saiu da sua conta.');
-        }
-
-        // INICIALIZAÇÃO
-        window.addEventListener('DOMContentLoaded', () => {
-            obterUsuarios();
+        // INICIALIZAÇÃO AO CARREGAR A PÁGINA
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarTemaSalvo();
             atualizarInterfaceUsuario();
         });
     </script>
