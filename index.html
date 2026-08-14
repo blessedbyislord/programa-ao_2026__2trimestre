@@ -6,19 +6,37 @@
     <title>GAME DO SABER - Colégio Estadual Roberto Langer Junior</title>
     
     <script>
-        // FUNÇÃO DE TRATAMENTO DE IMAGENS (DECLARADA NO TOPO PARA EVITAR ERROS)
+        // BANCO DE IMAGENS RESERVA (Para garantir que nenhuma imagem fique quebrada)
+        const imagensReserva = {
+            'Logo da Escola': 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&auto=format&fit=crop',
+            'Fachada da Escola': 'https://images.unsplash.com/photo-1562774053-701939374585?w=600&auto=format&fit=crop',
+            'Sala de Aula': 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&auto=format&fit=crop',
+            'Antes e Depois - Preservação': 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop',
+            'Ação 1': 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=500&auto=format&fit=crop',
+            'Ação 2': 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500&auto=format&fit=crop',
+            'Ação 3': 'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=500&auto=format&fit=crop',
+            'Ação 4': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop',
+            'Ação 5': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&auto=format&fit=crop',
+            'Ação 6': 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&auto=format&fit=crop'
+        };
+
+        // FUNÇÃO DE RECUPERAÇÃO AUTOMÁTICA DE IMAGENS
         function tratarErroImagem(imgElement, titulo) {
             if (!imgElement || imgElement.dataset.errorHandled) return;
             imgElement.dataset.errorHandled = "true";
 
-            const container = imgElement.parentElement;
-            const div = document.createElement('div');
-            div.className = 'img-fallback';
-            div.innerHTML = `<span style="font-size:2.5rem;">🖼️</span><span>${titulo}</span>`;
-            
-            if (container) {
-                imgElement.style.display = 'none';
-                container.appendChild(div);
+            // Se existir uma imagem reserva cadastrada, substitui a URL quebrada
+            if (imagensReserva[titulo]) {
+                imgElement.src = imagensReserva[titulo];
+            } else {
+                const container = imgElement.parentElement;
+                const div = document.createElement('div');
+                div.className = 'img-fallback';
+                div.innerHTML = `<span style="font-size:2.5rem;">🖼️</span><span>${titulo}</span>`;
+                if (container) {
+                    imgElement.style.display = 'none';
+                    container.appendChild(div);
+                }
             }
         }
     </script>
@@ -38,7 +56,7 @@
             background-color: #f4f6f9;
             color: #2c3e50;
             line-height: 1.6;
-            overflow: hidden; /* Trava a rolagem durante a Splash Screen */
+            overflow: hidden; /* Trava a rolagem na Splash Screen */
         }
 
         /* ==========================================
@@ -61,7 +79,6 @@
             overflow: hidden;
         }
 
-        /* Efeito de descida/revelação do site ao clicar em Entrar */
         .splash-overlay.revelar-site {
             transform: translateY(100%);
             opacity: 0;
@@ -91,7 +108,6 @@
             display: inline-block;
         }
 
-        /* Animação: Lâmpada crescendo e brilhando antes de explodir */
         .splash-lamp-icon.crescer-explodir {
             animation: crescerEBrilhar 0.7s forwards cubic-bezier(0.6, -0.28, 0.735, 0.045);
         }
@@ -112,7 +128,6 @@
             }
         }
 
-        /* Partículas: Lâmpadas menores que explodem do centro */
         .lamp-particle {
             position: absolute;
             top: 50%;
@@ -166,11 +181,10 @@
         .btn-comecar:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 15px 30px rgba(0, 210, 255, 0.5);
-            background: linear-gradient(135deg, #38bdf8, #00d2ff);
         }
 
         /* ==========================================
-           2. ANIMAÇÃO DE LÂMPADAS PISCANDO (HEADER)
+           2. HEADER E PISCA-PISCA
            ========================================== */
         @keyframes piscarLuz {
             0%, 100% {
@@ -193,7 +207,7 @@
         }
 
         /* ==========================================
-           3. OVERLAY DE LOGIN E MODAL
+           3. OVERLAY DE LOGIN / CADASTRO
            ========================================== */
         .auth-overlay {
             position: fixed;
@@ -244,8 +258,6 @@
             text-align: center;
         }
 
-        .auth-header p { font-size: 0.85rem; color: #00d2ff; }
-
         .auth-tabs { display: flex; background: #e2e8f0; }
 
         .auth-tab-btn {
@@ -293,7 +305,10 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 5px;
+            transition: background 0.3s;
         }
+
+        .btn-auth:hover { background: #00d2ff; color: #1b365d; }
 
         .link-esqueci {
             font-size: 0.85rem;
@@ -304,7 +319,7 @@
         }
 
         /* ==========================================
-           4. BARRA DE USUÁRIO E CABEÇALHO
+           4. NAVEGAÇÃO E BARRAS
            ========================================== */
         .user-bar {
             background: #0f172a;
@@ -339,9 +354,6 @@
         header h1 { font-size: 2.5rem; letter-spacing: 1px; text-transform: uppercase; }
         header h2 { font-size: 1.2rem; color: #00d2ff; margin-top: 5px; }
 
-        /* ==========================================
-           5. ABAS DE NAVEGAÇÃO
-           ========================================== */
         .tabs-nav {
             display: flex;
             justify-content: center;
@@ -380,7 +392,7 @@
         .tab-content.active { display: block; }
 
         /* ==========================================
-           6. CARDS, GALERIA E LAYOUTS
+           5. GALERIA E CONTEÚDOS
            ========================================== */
         .titulo-secao {
             text-align: center;
@@ -413,8 +425,7 @@
 
         .card-foto img {
             width: 100%;
-            height: auto;
-            max-height: 300px;
+            height: 250px;
             object-fit: cover;
             display: block;
         }
@@ -434,6 +445,8 @@
 
         .grid-acoes img {
             width: 100%;
+            height: 200px;
+            object-fit: cover;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -450,26 +463,77 @@
             border-left: 5px solid #1b365d;
         }
 
-        /* Container visual para imagens com falha de carregamento */
-        .img-fallback {
-            width: 100%;
-            height: 220px;
-            background: linear-gradient(135deg, #1b365d, #00d2ff);
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            padding: 20px;
+        /* ==========================================
+           6. PERFIL E FOTO DE PERFIL
+           ========================================== */
+        .perfil-card {
+            background: #ffffff;
+            max-width: 550px;
+            margin: 0 auto;
+            border-radius: 16px;
+            padding: 35px;
             text-align: center;
-            gap: 10px;
-            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
-        /* ==========================================
-           7. FORMULÁRIO E AVALIAÇÃO
-           ========================================== */
+        .perfil-avatar-wrapper {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px auto;
+        }
+
+        .perfil-avatar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1b365d, #00d2ff);
+            color: white;
+            font-size: 2.8rem;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 3px solid #ffffff;
+            overflow: hidden;
+        }
+
+        .btn-upload-foto {
+            display: inline-block;
+            background: #00d2ff;
+            color: #0f172a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-upload-foto:hover {
+            background: #38bdf8;
+            transform: scale(1.05);
+        }
+
+        #inputFotoPerfil {
+            display: none;
+        }
+
+        .perfil-badge {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0284c7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* AVALIAÇÃO */
         .form-box {
             background: #ffffff;
             max-width: 650px;
@@ -534,41 +598,6 @@
         }
 
         .card-agradecimento h3 { font-size: 2rem; color: #00d2ff; margin-bottom: 10px; }
-
-        .perfil-card {
-            background: #ffffff;
-            max-width: 550px;
-            margin: 0 auto;
-            border-radius: 16px;
-            padding: 35px;
-            text-align: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-
-        .perfil-avatar {
-            width: 90px;
-            height: 90px;
-            background: linear-gradient(135deg, #1b365d, #00d2ff);
-            color: white;
-            font-size: 2.5rem;
-            font-weight: bold;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px auto;
-        }
-
-        .perfil-badge {
-            display: inline-block;
-            background: #e0f2fe;
-            color: #0284c7;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
 
         footer {
             text-align: center;
@@ -755,7 +784,7 @@
         let emailParaReset = '';
         let inicioExecutado = false;
 
-        // FUNÇÃO DE ABERTURA DO SITE COM ANIMAÇÃO
+        // ABERTURA DO SITE COM ANIMAÇÃO
         function iniciarSite() {
             if (inicioExecutado) return;
             inicioExecutado = true;
@@ -766,15 +795,12 @@
 
             if (btn) btn.style.pointerEvents = 'none';
 
-            // 1. Lâmpada cresce e brilha intensamente
             if (lamp) {
                 lamp.classList.add('crescer-explodir');
             }
 
-            // 2. Dispara a explosão de lâmpadas menores
             criarExplosaoLampadas();
 
-            // 3. Libera rolagem e desce a tela revelando o site
             setTimeout(() => {
                 document.body.style.overflow = 'auto';
                 if (splash) {
@@ -786,18 +812,17 @@
             }, 650);
         }
 
-        // GERAÇÃO DAS LÂMPADAS QUE EXPLODEM
+        // EXPLOSÃO DE LÂMPADAS MENORES
         function criarExplosaoLampadas() {
             const splash = document.getElementById('splashScreen');
             if (!splash) return;
 
-            const quantidade = 40; // Quantidade de lâmpadas da explosão
+            const quantidade = 40;
             for (let i = 0; i < quantidade; i++) {
                 const particle = document.createElement('span');
                 particle.classList.add('lamp-particle');
                 particle.innerText = '💡';
 
-                // Cálculo de direção e velocidade randômica em 360 graus
                 const angulo = Math.random() * Math.PI * 2;
                 const distancia = 200 + Math.random() * 450;
                 const dx = (Math.cos(angulo) * distancia) + 'px';
@@ -812,7 +837,7 @@
             }
         }
 
-        // BANCO DE DADOS LOCAL E SESSÃO
+        // SESSÃO E BANCO DE DADOS LOCAL
         function obterUsuarios() {
             try {
                 let u = localStorage.getItem('game_saber_users');
@@ -821,12 +846,14 @@
                         'eduardo.miranda.carlos@escola.pr.gov.br': {
                             nome: 'Eduardo Miranda',
                             turma: 'Professor / Admin',
-                            senha: '123'
+                            senha: '123',
+                            avatar: null
                         },
                         'ceo@escola.pr.gov.br': {
                             nome: 'CEO - Direção Geral',
                             turma: 'Direção Executiva',
-                            senha: 'CEO@Game2026'
+                            senha: 'CEO@Game2026',
+                            avatar: null
                         }
                     };
                     localStorage.setItem('game_saber_users', JSON.stringify(defaultUsers));
@@ -834,9 +861,40 @@
                 }
                 return JSON.parse(u);
             } catch(e) {
-                return {
-                    'ceo@escola.pr.gov.br': { nome: 'CEO - Direção Geral', turma: 'Direção Executiva', senha: 'CEO@Game2026' }
+                return {};
+            }
+        }
+
+        // ALTERAÇÃO DA FOTO DE PERFIL
+        function alterarFotoPerfil(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Image = e.target.result;
+                    
+                    let usuarioLogado = null;
+                    try {
+                        usuarioLogado = JSON.parse(sessionStorage.getItem('usuario_logado'));
+                    } catch(err){}
+
+                    if (usuarioLogado) {
+                        usuarioLogado.avatar = base64Image;
+                        sessionStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
+
+                        // Atualiza no localStorage também
+                        let usuarios = obterUsuarios();
+                        if (usuarios[usuarioLogado.email]) {
+                            usuarios[usuarioLogado.email].avatar = base64Image;
+                            localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
+                        }
+
+                        iniciarSessao(usuarioLogado);
+                        alert('📷 Foto de perfil atualizada com sucesso!');
+                    } else {
+                        alert('Por favor, faça login para salvar sua foto de perfil!');
+                    }
                 };
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
@@ -875,7 +933,7 @@
                 return;
             }
 
-            usuarios[email] = { nome, turma, senha };
+            usuarios[email] = { nome, turma, senha, avatar: null };
             try {
                 localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
             } catch(err){}
@@ -908,151 +966,4 @@
             
             const userInfoText = document.getElementById('userInfoText');
             if(userInfoText) {
-                userInfoText.innerHTML = `Bem-vindo(a), <strong>${userObj.nome}</strong> (${userObj.turma})`;
-            }
-
-            const btn = document.getElementById('userBarBtn');
-            if(btn) {
-                btn.innerText = "Sair";
-                btn.className = "btn-logout";
-                btn.onclick = fazerLogout;
-            }
-
-            const elNome = document.getElementById('propNome');
-            const elTurma = document.getElementById('propTurma');
-            if(elNome) elNome.value = userObj.nome;
-            if(elTurma) elTurma.value = userObj.turma;
-
-            atualizarAbaPerfil(userObj);
-        }
-
-        function atualizarAbaPerfil(userObj) {
-            const perfilDiv = document.getElementById('perfilConteudo');
-            if(!perfilDiv) return;
-
-            if (userObj) {
-                const inicial = userObj.nome ? userObj.nome.charAt(0).toUpperCase() : 'U';
-                perfilDiv.innerHTML = `
-                    <div class="perfil-avatar">${inicial}</div>
-                    <div>
-                        <h4>${userObj.nome}</h4>
-                        <p style="color:#64748b; margin-top:4px;">${userObj.email || ''}</p>
-                        <span class="perfil-badge">${userObj.turma}</span>
-                    </div>
-                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                    <p style="font-size: 0.95rem; color: #475569;">Sua conta está ativa no <strong>Game do Saber</strong>.</p>
-                    <button onclick="fazerLogout()" class="btn-auth" style="background:#ef4444; margin-top:20px;">Sair da Conta</button>
-                `;
-            } else {
-                perfilDiv.innerHTML = `
-                    <div class="perfil-avatar" style="background: #94a3b8;">?</div>
-                    <div>
-                        <h4>Visitante Convidado</h4>
-                        <p style="color:#64748b; margin-top:4px;">Você está navegando sem login.</p>
-                        <span class="perfil-badge" style="background:#f1f5f9; color:#475569;">Modo Leitura</span>
-                    </div>
-                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                    <p style="font-size: 0.95rem; color: #475569;">Faça login para salvar suas informações!</p>
-                    <button onclick="abrirModalAuth()" class="btn-auth" style="margin-top: 15px;">Fazer Login / Cadastrar</button>
-                `;
-            }
-        }
-
-        function solicitarCodigoReset(e) {
-            e.preventDefault();
-            emailParaReset = document.getElementById('resetEmail').value.toLowerCase().trim();
-            let usuarios = obterUsuarios();
-
-            if (!usuarios[emailParaReset]) {
-                alert('E-mail não encontrado.');
-                return;
-            }
-
-            codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
-
-            fetch('https://formsubmit.co/ajax/eduardo.miranda.carlos@escola.pr.gov.br', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    _subject: "Código de Redefinição - Game do Saber",
-                    emailSolicitante: emailParaReset,
-                    codigoVerificacao: codigoGerado
-                })
-            }).catch(() => {});
-
-            alert(`Código enviado com sucesso!\n\nSeu código de verificação para testes é: ${codigoGerado}`);
-            mostrarFormAuth('formCodigoSenha');
-        }
-
-        function redefinirSenhaComCodigo(e) {
-            e.preventDefault();
-            const codDigitado = document.getElementById('inputCodigo').value.trim();
-            const novaSenha = document.getElementById('novaSenhaInput').value;
-
-            if (codDigitado !== codigoGerado) {
-                alert('Código incorreto!');
-                return;
-            }
-
-            let usuarios = obterUsuarios();
-            usuarios[emailParaReset].senha = novaSenha;
-            try {
-                localStorage.setItem('game_saber_users', JSON.stringify(usuarios));
-            } catch(err){}
-
-            alert('Senha alterada com sucesso!');
-            document.getElementById('formReset').reset();
-            document.getElementById('formCodigoSenha').reset();
-            mostrarFormAuth('formLogin');
-        }
-
-        function fazerLogout() {
-            try {
-                sessionStorage.removeItem('usuario_logado');
-            } catch(err){}
-            
-            const userInfoText = document.getElementById('userInfoText');
-            if(userInfoText) userInfoText.innerText = "Modo Convidado (Navegação Livre)";
-            
-            const btn = document.getElementById('userBarBtn');
-            if(btn) {
-                btn.innerText = "Fazer Login";
-                btn.className = "";
-                btn.onclick = abrirModalAuth;
-            }
-
-            const elNome = document.getElementById('propNome');
-            const elTurma = document.getElementById('propTurma');
-            if(elNome) elNome.value = "";
-            if(elTurma) elTurma.value = "";
-
-            atualizarAbaPerfil(null);
-        }
-
-        function trocarAba(event, idAba) {
-            document.querySelectorAll('.tab-content').forEach(aba => aba.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-            const target = document.getElementById(idAba);
-            if(target) target.classList.add('active');
-            
-            if(event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            let logado = null;
-            try {
-                logado = sessionStorage.getItem('usuario_logado');
-            } catch(err){}
-
-            if (logado) {
-                iniciarSessao(JSON.parse(logado));
-            } else {
-                atualizarAbaPerfil(null);
-            }
-        });
-    </script>
-</body>
-</html>
+                userInfoText.innerHTML = `Bem
