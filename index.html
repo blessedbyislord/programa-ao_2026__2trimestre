@@ -1,934 +1,265 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME DO SABER - Colégio Estadual Roberto Langer Junior</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Moderno & Interativo</title>
+  
+  <style>
+    /* 1. VARIÁVEIS E TEMAS (LIGHT/DARK) */
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --border: #e2e8f0;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      --radius: 16px;
+    }
 
-    <style>
-        /* ==========================================
-           1. ESTILOS BASE E RESETS
-           ========================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-card: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
 
-        body {
-            background-color: #f4f6f9;
-            color: #2c3e50;
-            line-height: 1.6;
-        }
+    /* 2. RESET E ESTILOS GERAIS */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
 
-        /* ==========================================
-           1.1 TELA DE INÍCIO INTERATIVA (SPLASH SCREEN)
-           ========================================== */
-        .splash-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #0a0f1d 0%, #1b365d 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            transition: transform 0.6s ease, opacity 0.6s ease;
-            text-align: center;
-            padding: 20px;
-            cursor: pointer;
-        }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
 
-        .splash-overlay.revelar-site {
-            transform: translateY(-100%);
-            opacity: 0;
-            pointer-events: none;
-        }
+    /* 3. CABEÇALHO & NAVEGAÇÃO */
+    header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-        .splash-content {
-            max-width: 500px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            position: relative;
-            z-index: 2;
-        }
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .splash-lamp-wrapper {
-            position: relative;
-            user-select: none;
-        }
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
 
-        .splash-lamp-icon {
-            font-size: 6.5rem;
-            filter: brightness(0.8) drop-shadow(0 0 15px rgba(251, 191, 36, 0.5));
-            transition: transform 0.3s ease;
-            display: inline-block;
-        }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
 
-        .splash-title {
-            color: #ffffff;
-            font-size: 2.2rem;
-            letter-spacing: 2px;
-            font-weight: 800;
-        }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-        .splash-subtitle {
-            color: #00d2ff;
-            font-size: 1.05rem;
-            margin-top: -10px;
-        }
+    .nav-links a:hover {
+      color: var(--accent);
+    }
 
-        .btn-comecar {
-            background: linear-gradient(135deg, #00d2ff, #0284c7);
-            color: #0f172a;
-            border: none;
-            padding: 16px 50px;
-            font-size: 1.25rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.3);
-            transition: all 0.3s ease;
-            margin-top: 15px;
-            text-transform: uppercase;
-        }
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
 
-        /* ==========================================
-           2. HEADER E PISCA-PISCA
-           ========================================== */
-        @keyframes piscarLuz {
-            0%, 100% { opacity: 1; filter: drop-shadow(0 0 15px #f59e0b); }
-            50% { opacity: 0.4; filter: none; }
-        }
+    /* 4. CONTEÚDO PRINCIPAL */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      width: 100%;
+    }
 
-        .lampada-pisca {
-            display: inline-block;
-            font-size: 2.2rem;
-            animation: piscarLuz 2.5s infinite ease-in-out;
-            margin: 0 10px;
-            vertical-align: middle;
-        }
+    /* HERO SECTION */
+    .hero {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
 
-        /* ==========================================
-           3. OVERLAY DE LOGIN / CADASTRO
-           ========================================== */
-        .auth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(6px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 20px;
-        }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
 
-        .auth-overlay.active { display: flex; }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+    }
 
-        .auth-card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 420px;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            overflow: hidden;
-            position: relative;
-        }
+    .btn-primary {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.85rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
 
-        .btn-fechar-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: #ffffff;
-            font-size: 1.2rem;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+    }
 
-        .auth-header {
-            background: linear-gradient(135deg, #1b365d, #2c5364);
-            color: #ffffff;
-            padding: 25px;
-            text-align: center;
-        }
+    /* CARDS SECTION (GRID) */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
 
-        .auth-tabs { display: flex; background: #e2e8f0; }
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
 
-        .auth-tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            font-weight: bold;
-            color: #64748b;
-            cursor: pointer;
-        }
+    .card:hover {
+      transform: translateY(-4px);
+    }
 
-        .auth-tab-btn.active {
-            background: #ffffff;
-            color: #1b365d;
-            border-bottom: 3px solid #00d2ff;
-        }
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
 
-        .auth-body { padding: 25px; }
+    .card h3 {
+      margin-bottom: 0.5rem;
+    }
 
-        .auth-form {
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-        }
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
 
-        .auth-form.active { display: flex; }
-
-        .auth-form input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            outline: none;
-        }
-
-        .btn-auth {
-            background: #1b365d;
-            color: #ffffff;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 5px;
-            transition: background 0.3s;
-        }
-
-        .btn-auth:hover { background: #00d2ff; color: #1b365d; }
-
-        .link-esqueci {
-            font-size: 0.85rem;
-            color: #0284c7;
-            text-align: right;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        /* ==========================================
-           4. NAVEGAÇÃO E BARRAS
-           ========================================== */
-        .user-bar {
-            background: #0f172a;
-            color: #ffffff;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-        }
-
-        .user-bar button {
-            background: #00d2ff;
-            color: #0f172a;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .user-bar button.btn-logout { background: #ef4444; color: #ffffff; }
-
-        header {
-            background: linear-gradient(135deg, #1b365d 0%, #2c5364 100%);
-            color: #ffffff;
-            text-align: center;
-            padding: 35px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        header h1 { font-size: 2.5rem; letter-spacing: 1px; text-transform: uppercase; }
-        header h2 { font-size: 1.2rem; color: #00d2ff; margin-top: 5px; }
-
-        .tabs-nav {
-            display: flex;
-            justify-content: center;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 16px 22px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: #555;
-            cursor: pointer;
-            border-bottom: 4px solid transparent;
-        }
-
-        .tab-btn.active {
-            color: #1b365d;
-            border-bottom: 4px solid #00d2ff;
-            background-color: #ffffff;
-        }
-
-        .tab-content {
-            display: none;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 35px 20px;
-        }
-
-        .tab-content.active { display: block; }
-
-        /* ==========================================
-           5. GALERIA E CONTEÚDOS
-           ========================================== */
-        .titulo-secao {
-            text-align: center;
-            font-size: 1.8rem;
-            color: #1b365d;
-            margin-bottom: 25px;
-        }
-
-        .galeria-flex {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .card-foto {
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-            text-align: center;
-            max-width: 450px;
-            width: 100%;
-            min-height: 250px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card-foto img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card-foto figcaption {
-            padding: 14px;
-            font-weight: bold;
-            color: #1b365d;
-        }
-
-        .grid-acoes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .grid-acoes img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        /* ==========================================
-           6. PERFIL E FOTO DE PERFIL
-           ========================================== */
-        .perfil-card {
-            background: #ffffff;
-            max-width: 550px;
-            margin: 0 auto;
-            border-radius: 16px;
-            padding: 35px;
-            text-align: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-
-        .perfil-avatar-wrapper {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 15px auto;
-        }
-
-        .perfil-avatar {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1b365d, #00d2ff);
-            color: white;
-            font-size: 2.8rem;
-            font-weight: bold;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            object-fit: cover;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            border: 4px solid #ffffff;
-            overflow: hidden;
-        }
-
-        .btn-upload-foto {
-            display: inline-block;
-            background: #00d2ff;
-            color: #0f172a;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 5px;
-            transition: all 0.2s;
-        }
-
-        .btn-upload-foto:hover {
-            background: #38bdf8;
-            transform: scale(1.05);
-        }
-
-        #inputFotoPerfil { display: none; }
-
-        .perfil-badge {
-            display: inline-block;
-            background: #e0f2fe;
-            color: #0284c7;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
-
-        /* FORMULÁRIO */
-        .form-box {
-            background: #ffffff;
-            max-width: 650px;
-            margin: 0 auto;
-            padding: 35px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-
-        .rating-stars {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: center;
-            gap: 8px;
-            margin: 15px 0 25px 0;
-        }
-
-        .rating-stars input { display: none; }
-
-        .rating-stars label {
-            font-size: 2.2rem;
-            color: #cccccc;
-            cursor: pointer;
-        }
-
-        .rating-stars input:checked ~ label,
-        .rating-stars label:hover,
-        .rating-stars label:hover ~ label {
-            color: #ffb400;
-        }
-
-        .form-group { margin-bottom: 15px; }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background-color: #1b365d;
-            color: #ffffff;
-            border: none;
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .card-agradecimento {
-            background: linear-gradient(135deg, #0f172a, #1b365d);
-            color: #ffffff;
-            border-radius: 16px;
-            padding: 35px 25px;
-            text-align: center;
-            margin-top: 35px;
-        }
-
-        .card-agradecimento h3 { font-size: 2rem; color: #00d2ff; margin-bottom: 10px; }
-
-        footer {
-            text-align: center;
-            padding: 25px;
-            background-color: #1b365d;
-            color: #ffffff;
-            margin-top: 50px;
-            font-size: 0.9rem;
-        }
-    </style>
+    /* 5. RODAPÉ */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4rem;
+    }
+  </style>
 </head>
 <body>
 
-    <div id="splashScreen" class="splash-overlay" onclick="iniciarSite()">
-        <div class="splash-content">
-            <div class="splash-lamp-wrapper">
-                <span id="splashLamp" class="splash-lamp-icon">💡</span>
-            </div>
-            <h1 class="splash-title">GAME DO SABER</h1>
-            <p class="splash-subtitle">Colégio Estadual Roberto Langer Junior</p>
-            <button id="btnComecar" class="btn-comecar">Clique para Entrar</button>
-        </div>
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">✨ WebCraft</a>
+      <nav class="nav-links">
+        <a href="#recursos">Recursos</a>
+        <a href="#sobre">Sobre</a>
+        <button class="theme-toggle" id="theme-btn">🌙 Tema</button>
+      </nav>
     </div>
+  </header>
 
-    <div id="authOverlay" class="auth-overlay">
-        <div class="auth-card">
-            <button class="btn-fechar-modal" onclick="fecharModalAuth()">&times;</button>
-            <div class="auth-header">
-                <h2><span class="lampada-pisca">💡</span> GAME DO SABER</h2>
-                <p>Colégio Roberto Langer Junior</p>
-            </div>
-
-            <div class="auth-tabs">
-                <button class="auth-tab-btn active" onclick="mostrarFormAuth('formLogin')">Entrar</button>
-                <button class="auth-tab-btn" onclick="mostrarFormAuth('formCadastro')">Cadastrar</button>
-            </div>
-
-            <div class="auth-body">
-                <form id="formLogin" class="auth-form active" onsubmit="fazerLogin(event)">
-                    <input type="email" id="loginEmail" placeholder="Seu E-mail" required>
-                    <input type="password" id="loginSenha" placeholder="Sua Senha" required>
-                    <span class="link-esqueci" onclick="mostrarFormAuth('formReset')">Esqueceu a senha?</span>
-                    <button type="submit" class="btn-auth">Acessar</button>
-                </form>
-
-                <form id="formCadastro" class="auth-form" onsubmit="cadastrarUsuario(event)">
-                    <input type="text" id="cadNome" placeholder="Nome Completo" required>
-                    <input type="text" id="cadTurma" placeholder="Sua Turma (Ex: 1º Ano B)" required>
-                    <input type="email" id="cadEmail" placeholder="Seu E-mail" required>
-                    <input type="password" id="cadSenha" placeholder="Crie uma Senha" required>
-                    <button type="submit" class="btn-auth">Criar Conta</button>
-                </form>
-
-                <form id="formReset" class="auth-form" onsubmit="solicitarCodigoReset(event)">
-                    <p style="font-size:0.85rem; color:#64748b;">Digite seu e-mail para receber o código.</p>
-                    <input type="email" id="resetEmail" placeholder="Seu E-mail" required>
-                    <button type="submit" class="btn-auth">Enviar Código</button>
-                    <span class="link-esqueci" style="text-align:center;" onclick="mostrarFormAuth('formLogin')">Voltar ao Login</span>
-                </form>
-
-                <form id="formCodigoSenha" class="auth-form" onsubmit="redefinirSenhaComCodigo(event)">
-                    <p style="font-size:0.85rem; color:#10b981; font-weight:bold;">Código enviado com sucesso!</p>
-                    <input type="text" id="inputCodigo" placeholder="Digite o Código de 6 dígitos" required>
-                    <input type="password" id="novaSenhaInput" placeholder="Sua Nova Senha" required>
-                    <button type="submit" class="btn-auth">Confirmar Senha</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div id="userBar" class="user-bar">
-        <span id="userInfoText">Modo Convidado (Navegação Livre)</span>
-        <button id="userBarBtn" onclick="abrirModalAuth()">Fazer Login</button>
-    </div>
-
-    <header>
-        <h1><span class="lampada-pisca">💡</span> GAME DO SABER <span class="lampada-pisca">💡</span></h1>
-        <h2>Colégio Estadual Roberto Langer Junior</h2>
-        <p>NOSSA ESCOLA, NOSSO COMPROMISSO</p>
-    </header>
-
-    <nav class="tabs-nav">
-        <button class="tab-btn active" onclick="trocarAba(event, 'aba-escola')">Nossa Escola</button>
-        <button class="tab-btn" onclick="trocarAba(event, 'aba-acoes')">Ações e Galeria</button>
-        <button class="tab-btn" onclick="trocarAba(event, 'aba-propostas')">Avaliação & Ideias</button>
-        <button class="tab-btn" onclick="trocarAba(event, 'aba-perfil')">Meu Perfil</button>
-    </nav>
-
-    <main id="aba-escola" class="tab-content active">
-        <h3 class="titulo-secao">Conheça a Nossa Estrutura</h3>
-        <div class="galeria-flex">
-            <figure class="card-foto">
-                <img src="logoescola.jpeg" alt="Logo da Escola">
-                <figcaption>Logo Oficial da Escola</figcaption>
-            </figure>
-            <figure class="card-foto">
-                <img src="frenteescola.jpeg" alt="Frente da Escola">
-                <figcaption>Fachada Principal</figcaption>
-            </figure>
-        </div>
-    </main>
-
-    <section id="aba-acoes" class="tab-content">
-        <h3 class="titulo-secao">O que nós podemos fazer para tornar nossa escola ainda melhor?</h3>
-        <p style="text-align: center; margin-bottom: 20px;">Confira abaixo a sequência de ações para a preservação do espaço escolar:</p>
-        <div class="grid-acoes">
-            <img src="1.png" alt="Ação 1">
-            <img src="2.png" alt="Ação 2">
-            <img src="3.png" alt="Ação 3">
-            <img src="4.png" alt="Ação 4">
-            <img src="5.png" alt="Ação 5">
-            <img src="6.png" alt="Ação 6">
-        </div>
+  <main>
+    <section class="hero">
+      <h1>Crie Experiências Incríveis na Web</h1>
+      <p>Estrutura limpa, código moderno, responsivo e preparado para expansão rápida.</p>
+      <button class="btn-primary" id="cta-btn">Começar Agora</button>
     </section>
 
-    <section id="aba-propostas" class="tab-content">
-        <div class="form-box">
-            <h3 class="titulo-secao">Deixe sua Avaliação e Proposta</h3>
-            <p style="text-align: center; color: #666; margin-bottom: 15px;">Dê sua nota para a escola e envie ideias diretamente para a nossa equipe!</p>
-            
-            <form action="https://formsubmit.co/eduardo.miranda.carlos@escola.pr.gov.br" method="POST">
-                <input type="hidden" name="_subject" value="Nova Proposta - Game do Saber">
-                <input type="hidden" name="_captcha" value="false">
+    <section class="features-grid" id="recursos">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Alta Performance</h3>
+        <p>Código otimizado para carregar instantaneamente em qualquer dispositivo.</p>
+      </div>
 
-                <div class="rating-stars">
-                    <input type="radio" id="st5" name="Avaliação" value="5 Estrelas" required><label for="st5">★</label>
-                    <input type="radio" id="st4" name="Avaliação" value="4 Estrelas"><label for="st4">★</label>
-                    <input type="radio" id="st3" name="Avaliação" value="3 Estrelas"><label for="st3">★</label>
-                    <input type="radio" id="st2" name="Avaliação" value="2 Estrelas"><label for="st2">★</label>
-                    <input type="radio" id="st1" name="Avaliação" value="1 Estrela"><label for="st1">★</label>
-                </div>
+      <div class="card">
+        <div class="card-icon">🎨</div>
+        <h3>Design Adaptável</h3>
+        <p>Suporte nativo a Modo Claro e Modo Escuro com variáveis de CSS.</p>
+      </div>
 
-                <div class="form-group">
-                    <input type="text" id="propNome" name="Nome do Aluno" placeholder="Seu Nome" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="propTurma" name="Turma" placeholder="Sua Turma" required>
-                </div>
-                <div class="form-group">
-                    <textarea name="Proposta / Ideia" rows="5" placeholder="Escreva aqui sua ideia ou proposta..." required></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">Enviar Proposta por E-mail</button>
-            </form>
-        </div>
-
-        <div class="card-agradecimento">
-            <h3><span class="lampada-pisca">💡</span> OBRIGADO POR PARTICIPAR!</h3>
-            <p>Sua voz e sua proposta são fundamentais para construirmos uma escola cada vez melhor. Juntos, estamos transformando o Colégio Estadual Roberto Langer Junior!</p>
-        </div>
+      <div class="card">
+        <div class="card-icon">📱</div>
+        <h3>100% Responsivo</h3>
+        <p>Ajuste automático para telas de celulares, tablets e computadores.</p>
+      </div>
     </section>
+  </main>
 
-    <section id="aba-perfil" class="tab-content">
-        <h3 class="titulo-secao">Meu Perfil</h3>
-        <div id="perfilConteudo" class="perfil-card">
-            </div>
-    </section>
+  <footer>
+    <p>&copy; 2026 WebCraft. Todos os direitos reservados.</p>
+  </footer>
 
-    <footer>
-        <p>&copy; 2026 GAME DO SABER - Colégio Estadual Roberto Langer Junior | Todos os direitos reservados.</p>
-    </footer>
+  <script>
+    // Configuração do Tema (Dark Mode)
+    const themeBtn = document.getElementById('theme-btn');
+    const currentTheme = localStorage.getItem('theme');
 
-    <script>
-        let codigoGerado = null;
-        let emailParaReset = '';
-        let inicioExecutado = false;
+    if (currentTheme) {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      themeBtn.textContent = currentTheme === 'dark' ? '☀️ Claro' : '🌙 Escuro';
+    }
 
-        // LEITURA E ESCRITA SEGURA NO STORAGE
-        function safeGetStorage(type, key) {
-            try {
-                const storage = type === 'session' ? sessionStorage : localStorage;
-                return storage ? storage.getItem(key) : null;
-            } catch (e) {
-                return null;
-            }
-        }
+    themeBtn.addEventListener('click', () => {
+      let theme = document.documentElement.getAttribute('data-theme');
+      
+      if (theme === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        themeBtn.textContent = '🌙 Escuro';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeBtn.textContent = '☀️ Claro';
+      }
+    });
 
-        function safeSetStorage(type, key, value) {
-            try {
-                const storage = type === 'session' ? sessionStorage : localStorage;
-                if (storage) storage.setItem(key, value);
-                return true;
-            } catch (e) {
-                return false;
-            }
-        }
+    // Ação do Botão principal
+    document.getElementById('cta-btn').addEventListener('click', () => {
+      alert('O site está funcionando perfeitamente!');
+    });
+  </script>
 
-        // TELA DE INÍCIO
-        function iniciarSite() {
-            if (inicioExecutado) return;
-            inicioExecutado = true;
-
-            const splash = document.getElementById('splashScreen');
-            if (splash) {
-                splash.classList.add('revelar-site');
-                setTimeout(() => splash.style.display = 'none', 600);
-            }
-        }
-
-        // USUÁRIOS
-        function obterUsuarios() {
-            let u = safeGetStorage('local', 'game_saber_users');
-            if(!u) {
-                let defaultUsers = {
-                    'eduardo.miranda.carlos@escola.pr.gov.br': {
-                        nome: 'Eduardo Miranda',
-                        turma: 'Professor / Admin',
-                        senha: '123',
-                        avatar: null
-                    },
-                    'ceo@escola.pr.gov.br': {
-                        nome: 'CEO - Direção Geral',
-                        turma: 'Direção Executiva',
-                        senha: 'CEO@Game2026',
-                        avatar: null
-                    }
-                };
-                safeSetStorage('local', 'game_saber_users', JSON.stringify(defaultUsers));
-                return defaultUsers;
-            }
-            try {
-                return JSON.parse(u);
-            } catch(e) {
-                return {};
-            }
-        }
-
-        // FOTO DE PERFIL
-        function alterarFotoPerfil(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const maxDim = 150;
-
-                        if (width > height) {
-                            if (width > maxDim) {
-                                height = Math.round((height * maxDim) / width);
-                                width = maxDim;
-                            }
-                        } else {
-                            if (height > maxDim) {
-                                width = Math.round((width * maxDim) / height);
-                                height = maxDim;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const fotoOtimizada = canvas.toDataURL('image/jpeg', 0.8);
-
-                        let rawUser = safeGetStorage('session', 'usuario_logado');
-                        let usuarioLogado = rawUser ? JSON.parse(rawUser) : null;
-
-                        if (usuarioLogado) {
-                            usuarioLogado.avatar = fotoOtimizada;
-                            safeSetStorage('session', 'usuario_logado', JSON.stringify(usuarioLogado));
-                            
-                            let usuarios = obterUsuarios();
-                            if (usuarios[usuarioLogado.email]) {
-                                usuarios[usuarioLogado.email].avatar = fotoOtimizada;
-                                safeSetStorage('local', 'game_saber_users', JSON.stringify(usuarios));
-                            }
-
-                            iniciarSessao(usuarioLogado);
-                            alert('📷 Foto de perfil salva com sucesso!');
-                        } else {
-                            alert('Faça login para salvar a foto!');
-                        }
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function mostrarFormAuth(formId) {
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            const target = document.getElementById(formId);
-            if(target) target.classList.add('active');
-
-            const btns = document.querySelectorAll('.auth-tab-btn');
-            btns.forEach(b => b.classList.remove('active'));
-            if(formId === 'formLogin' && btns[0]) btns[0].classList.add('active');
-            if(formId === 'formCadastro' && btns[1]) btns[1].classList.add('active');
-        }
-
-        function abrirModalAuth() {
-            const overlay = document.getElementById('authOverlay');
-            if(overlay) overlay.classList.add('active');
-        }
-
-        function fecharModalAuth() {
-            const overlay = document.getElementById('authOverlay');
-            if(overlay) overlay.classList.remove('active');
-        }
-
-        function cadastrarUsuario(e) {
-            e.preventDefault();
-            const nome = document.getElementById('cadNome').value.trim();
-            const turma = document.getElementById('cadTurma').value.trim();
-            const email = document.getElementById('cadEmail').value.toLowerCase().trim();
-            const senha = document.getElementById('cadSenha').value;
-
-            let usuarios = obterUsuarios();
-
-            if (usuarios[email]) {
-                alert('Este e-mail já está cadastrado!');
-                return;
-            }
-
-            usuarios[email] = { nome, turma, senha, avatar: null };
-            safeSetStorage('local', 'game_saber_users', JSON.stringify(usuarios));
-
-            alert('Conta criada com sucesso! Faça seu login.');
-            mostrarFormAuth('formLogin');
-            document.getElementById('formCadastro').reset();
-        }
-
-        function fazerLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.toLowerCase().trim();
-            const senha = document.getElementById('loginSenha').value;
-
-            let usuarios = obterUsuarios();
-
-            if (usuarios[email] && usuarios[email].senha === senha) {
-                const userObj = usuarios[email];
-                userObj.email = email;
-                safeSetStorage('session', 'usuario_logado', JSON.stringify(userObj));
-                iniciarSessao(userObj);
-                fecharModalAuth();
-                alert('Login realizado com sucesso!');
-            } else {
-                alert('E-mail ou senha incorretos!');
-            }
-        }
-
-        function iniciarSessao(user) {
-            const userInfoText = document.getElementById('userInfoText');
-            const userBarBtn = document.getElementById('userBarBtn');
-            if (userInfoText) userInfoText.textContent = `Olá, ${user.nome} (${user.turma})`;
-            if (userBarBtn) {
-                userBarBtn.textContent = 'Sair';
-                userBarBtn.className = 'btn-logout';
-                userBarBtn.onclick = fazerLogout;
-            }
-            atualizarPerfilUI(user);
-        }
-
-        function fazerLogout() {
-            try { sessionStorage.removeItem('usuario_logado'); } catch(e){}
-            location.reload();
-        }
-
-        function atualizarPerfilUI(user) {
-            const perfilConteudo = document.getElementById('perfilConteudo');
-            if (!perfilConteudo) return;
-
-            let avatarHtml = user.avatar 
-                ? `<img src="${user.avatar}" class="perfil-avatar" alt="Foto de Perfil">`
-                : `<div class="perfil-avatar">${user.nome ? user.nome.charAt(0).toUpperCase() : 'U'}</div>`;
-
-            perfilConteudo.innerHTML = `
-                <div class="perfil-avatar-wrapper">
-                    ${avatarHtml}
-                </div>
-                <label for="inputFotoPerfil" class="btn-upload-foto">Alterar Foto</label>
-                <input type="file" id="inputFotoPerfil" accept="image/*" onchange="alterarFotoPerfil(this)">
-                <h3 style="margin-top:15px; color:#1b365d;">${user.nome}</h3>
-                <p style="color:#64748b;">${user.email}</p>
-                <span class="perfil-badge">${user.turma}</span>
-            `;
-        }
-
-        function trocarAba(event, abaId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-            const targetTab = document.getElementById(abaId);
-            if (targetTab) targetTab.classList.add('active');
-            if (event && event.currentTarget) event.currentTarget.classList.add('active');
-        }
-
-        function solicitarCodigoReset(e) {
-            e.preventDefault();
-            emailParaReset = document.getElementById('resetEmail').value.toLowerCase().trim();
-            let usuarios = obterUsuarios();
-
-            if (!usuarios[emailParaReset]) {
-                alert('E-mail não encontrado!');
-                return;
-            }
-
-            codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
-            alert(`[SIMULAÇÃO DE E-MAIL] Seu código de verificação é: ${codigoGerado}`);
-            mostrarFormAuth('formCodigoSenha');
-        }
-
-        function redefinirSenhaComCodigo(e) {
-            e.preventDefault();
-            const codigoDigitado = document.getElementById('inputCodigo').value.trim();
-            const novaSenha = document.getElementById('novaSenhaInput').value;
-
-            if (codigoDigitado !== codigoGerado) {
-                alert('Código incorreto!');
-                return;
-            }
-
-            let usuarios = obterUsuarios();
-            if (usuarios[emailParaReset]) {
-                usuarios[emailParaReset].senha = novaSenha;
-                safeSetStorage('local', 'game_saber_users', JSON.stringify(usuarios));
-                alert('Senha alterada com sucesso! Faça login com a nova senha.');
-                mostrarFormAuth('formLogin');
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            let rawUser = safeGetStorage('session', 'usuario_logado');
-            if (rawUser) {
-                try {
-                    let user = JSON.parse(rawUser);
-                    iniciarSessao(user);
-                } catch(e) {}
-            }
-        });
-    </script>
 </body>
 </html>
