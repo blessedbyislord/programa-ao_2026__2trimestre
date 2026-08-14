@@ -6,7 +6,7 @@
   <title>Meu Site - Completo e Otimizado</title>
   
   <style>
-    /* 1. VARIÁVEIS DE COR E TEMAS */
+    /* VARIÁVEIS DE COR E TEMAS */
     :root {
       --bg-primary: #f8fafc;
       --bg-card: #ffffff;
@@ -28,7 +28,7 @@
       --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     }
 
-    /* 2. RESET E ESTILOS GERAIS */
+    /* RESET E ESTILOS GERAIS */
     * {
       margin: 0;
       padding: 0;
@@ -46,7 +46,7 @@
       line-height: 1.6;
     }
 
-    /* 3. CABEÇALHO */
+    /* CABEÇALHO */
     header {
       background-color: var(--bg-card);
       border-bottom: 1px solid var(--border);
@@ -87,7 +87,6 @@
       color: var(--accent);
     }
 
-    /* Botão de Engrenagem */
     .icon-btn {
       background: transparent;
       border: 1px solid var(--border);
@@ -105,7 +104,7 @@
       background-color: var(--border);
     }
 
-    /* 4. CONTEÚDO PRINCIPAL */
+    /* CONTEÚDO PRINCIPAL */
     main {
       flex: 1;
       max-width: 1100px;
@@ -114,7 +113,6 @@
       width: 100%;
     }
 
-    /* HERO SECTION */
     .hero {
       text-align: center;
       margin-bottom: 3.5rem;
@@ -196,7 +194,7 @@
       border-radius: 12px;
     }
 
-    /* 5. MODAL DE CONFIGURAÇÕES */
+    /* MODAL DE CONFIGURAÇÕES */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -320,13 +318,11 @@
   </footer>
 
   <script>
-    // Elementos do Modal de Configurações
     const settingsBtn = document.getElementById('settings-btn');
     const settingsModal = document.getElementById('settings-modal');
     const closeModal = document.getElementById('close-modal');
     const themeBtn = document.getElementById('theme-btn');
 
-    // Abrir e fechar Modal
     settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
     closeModal.addEventListener('click', () => settingsModal.classList.remove('active'));
     
@@ -334,7 +330,6 @@
       if (e.target === settingsModal) settingsModal.classList.remove('active');
     });
 
-    // Lógica do Modo Escuro / Claro
     const currentTheme = localStorage.getItem('theme');
 
     if (currentTheme) {
@@ -356,7 +351,6 @@
       }
     });
 
-    // Ação do Botão Entrar
     document.getElementById('cta-btn').addEventListener('click', () => {
       alert('Login efetuado com sucesso!');
     });
