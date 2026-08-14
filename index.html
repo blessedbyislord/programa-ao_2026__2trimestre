@@ -1,42 +1,127 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animação SVG</title>
-  <style>
-    /* Reset básico */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME DO SABER - Colégio Estadual Roberto Langer Junior</title>
 
-    /* Estilização da página para centralizar a animação */
-    body {
-      background-color: #020916;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
+    <style>
+        /* ==========================================
+           1. ESTILOS BASE E RESETS
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-    /* Container para controlar o tamanho máximo do SVG */
-    .hero-animation {
-      width: 100%;
-      max-width: 800px;
-      padding: 20px;
-    }
+        body {
+            background-color: #f4f6f9;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
 
-    .hero-animation svg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-  </style>
-</head>
-<body>
+        /* ==========================================
+           1.1 TELA DE INÍCIO INTERATIVA (SPLASH SCREEN)
+           ========================================== */
+        .splash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0f1d 0%, #1b365d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+        }
 
-  <main class="hero-animation">
-    <svg id="ekDP3Ko52ry1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 700 400" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" style="background-color:#020916"><defs><filter id="ekDP3Ko52ry5-filter" x="-150%" width="400%" y="-150%" height="400%"><feGaussianBlur id="ekDP3Ko52ry5-filter-blur-0" stdDeviation="8,8" result="result"/></filter><filter id="ekDP3Ko52ry6-filter" x="-150%" width="400%" y="-150%" height="400%"><feGaussianBlur id="ekDP3Ko52ry6-filter-blur-0" stdDeviation="8,8" result="result"/></filter><filter id="ekDP3Ko52ry7-filter" x="-150%" width="400%" y="-150%" height="400%"><feGaussianBlur id="ekDP3Ko52ry7-filter-blur-0" stdDeviation="8,8" result="result"/></filter><linearGradient id="ekDP3Ko52ry9-fill" x1="0" y1="0.5" x2="1" y2="0.5" spreadMethod="pad" gradientUnits="objectBoundingBox" gradientTransform="translate(0 0)"><stop id="ekDP3Ko52ry9-fill-0" offset="0%" stop-color="#074a98"/><stop id="ekDP3Ko52ry9-fill-1" offset="100%" stop-color="#003160"/></linearGradient><linearGradient id="ekDP3Ko52ry10-fill" x1="0" y1="0.5" x2="1" y2="0.5" spreadMethod="pad" gradientUnits="objectBoundingBox" gradientTransform="translate(0 0)"><stop id="ekDP3Ko52ry10-fill-0" offset="0%" stop-color="#074a98"/><stop id="ekDP3Ko52ry10-fill-1" offset="100%" stop-color="#003160"/></linearGradient><linearGradient id="ekDP3Ko52ry11-fill" x1="0" y1="0.5" x2="1" y2="0.5" spreadMethod="pad" gradientUnits="objectBoundingBox" gradientTransform="translate(0 0)"><stop id="ekDP3Ko52ry11-fill-0" offset="0%" stop-color="#074a98"/><stop id="ekDP3Ko52ry11-fill-1" offset="100%" stop-color="#003160"/></linearGradient><linearGradient id="ekDP3Ko52ry12-fill" x1="0" y1="0.5" x2="1" y2="0.5" spreadMethod="pad" gradientUnits="objectBoundingBox" gradientTransform="translate(0 0)"><stop id="ekDP3Ko52ry12-fill-0" offset="0%" stop-color="#074a98"/><stop id="ekDP3Ko52ry12-fill-1" offset="100%" stop-color="#003160"/></linearGradient><linearGradient id="ekDP3Ko52ry29-stroke" x1="310.912" y1="690.335" x2="310.912" y2="254.9173" spreadMethod="pad" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 0)"><stop id="ekDP3Ko52ry29-stroke-0" offset="0%" stop-color="#fdd3d6"/><stop id="ekDP3Ko52ry29-stroke-1" offset="17.72%" stop-color="#9470bb"/><stop id="ekDP3Ko52ry29-stroke-2" offset="37.57%" stop-color="#0d68b9"/><stop id="ekDP3Ko52ry29-stroke-3" offset="58.2%" stop-color="#0d3994"/><stop id="ekDP3Ko52ry29-stroke-4" offset="92.33%" stop-color="#0d032c"/></linearGradient><linearGradient id="ekDP3Ko52ry31-stroke" x1="310.912" y1="690.335" x2="310.912" y2="254.9173" spreadMethod="pad" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 0)"><stop id="ekDP3Ko52ry31-stroke-0" offset="0%" stop-color="#fdd3d6"/><stop id="ekDP3Ko52ry31-stroke-1" offset="17.72%" stop-color="#9470bb"/><stop id="ekDP3Ko52ry31-stroke-2" offset="37.57%" stop-color="#0d68b9"/><stop id="ekDP3Ko52ry31-stroke-3" offset="58.2%" stop-color="#0d3994"/><stop id="ekDP3Ko52ry31-stroke-4" offset="92.33%" stop-color="#0d032c"/></linearGradient><linearGradient id="ekDP3Ko52ry33-stroke" x1="310.912" y1="690.335" x2="310.912" y2="254.9173" spreadMethod="pad" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 0)"><stop id="ekDP3Ko52ry33-stroke-0" offset="0%" stop-color="#fdd3d6"/><stop id="ekDP3Ko52ry33-stroke-1" offset="17.72%" stop-color="#9470bb"/><stop id="ekDP3Ko52ry33-stroke-2" offset="37.57%" stop-color="#0d68b9"/><stop id="ekDP3Ko52ry33-stroke-3" offset="58.2%" stop-color="#0d3994"/><stop id="ekDP3Ko52ry33-stroke-4" offset="92.33%" stop-color="#0d032c"/></linearGradient><linearGradient id="ekDP3Ko52ry35-stroke" x1="310.912" y1="690.335" x2="310.912" y2="254.9173" spreadMethod="pad" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 0)"><stop id="ekDP3Ko52ry35-stroke-0" offset="0%" stop-color="#fdd3d6"/><stop id="ekDP3Ko52ry35-stroke-1" offset="17.72%" stop-color="#9470bb"/><stop id="ekDP3Ko52ry35-stroke-2" offset="37.57%" stop-color="#0d68b9"/><stop id="ekDP3Ko52ry35-stroke-3" offset="58.2%" stop-color="#0d3994"/><stop id="ekDP3Ko52ry35-stroke-4" offset="92.33%" stop-color="#0d032c"/></linearGradient><filter id="ekDP3Ko52ry37-filter" x="-150%" width="400%" y="-150%" height="400%"><feGaussianBlur id="ekDP3Ko52ry37-filter-blur-0" stdDeviation="15,15" result="result"/></filter><filter id="ekDP3Ko52ry38-filter" x="-150%" width="400%" y="-150%" height="400%"><feGaussianBlur id="ekDP3Ko52ry38-filter-blur-0" stdDeviation="15,15" result="result"/></filter><radialGradient id="ekDP3Ko52ry40-fill" cx="0" cy="0" r="250.694278" spreadMethod="pad" gradientUnits="userSpaceOnUse" gradientTransform="translate(373.132632 186.402328)"><stop id="ekDP3Ko52ry40-fill-0" offset="38%" stop-color="#1e3785"/><stop id="ekDP3Ko52ry40-fill-1" offset="67%" stop-color="#0d68b9"/></radialGradient><radialGradient id="ekDP3Ko52ry41-fill" cx="0" cy="0" r="265.695473" spreadMethod="pad" gradientUnits="userSpaceOnUse" gradientTransform="translate(340.479044 86.817699)"><stop id="ekDP3Ko52ry41-fill-0" offset="15%" stop-color="#ffe8f2"/><stop id="ekDP3Ko52ry41-fill-1" offset="28%" stop-color="#caa7cd"/><stop id="ekDP3Ko52ry41-fill-2" offset="42%" stop-color="#88569e"/><stop id="ekDP3Ko52ry41-fill-3" offset="61%" stop-color="#1d3b97"/><stop id="ekDP3Ko52ry41-fill-4" offset="87%" stop-color="#174ea0"/><stop id="ekDP3Ko52ry41-fill-5" offset="100%" stop-color="#0d68b9"/></radialGradient><filter id="ekDP3Ko52ry45-filter" x="-150%" width="400%" y="-150%" height="400%"><feGaussianBlur id="ekDP3Ko52ry45-filter-blur-0" stdDeviation="24,24" result="result"/></filter></defs><rect width="465.259103" height="400" rx="0" ry="0" transform="matrix(1.504538 0 0 1 0 0)" fill="#020916"/><g id="ekDP3Ko52ry3" transform="matrix(.46 0 0 0.46 172.591729 9.864852)"><g><ellipse id="ekDP3Ko52ry5" rx="242.41" ry="233.76" transform="translate(275.64 292.76)" opacity="0.15" filter="url(#ekDP3Ko52ry5-filter)" fill="#171973"/><ellipse id="ekDP3Ko52ry6" rx="128.08" ry="123.51" transform="translate(488.71 616.64)" opacity="0.15" filter="url(#ekDP3Ko52ry6-filter)" fill="#0d40b7"/><ellipse id="ekDP3Ko52ry7" rx="63.13" ry="60.88" transform="matrix(1.334898 0 0 1.334898 652.489575 250.99372)" opacity="0.15" filter="url(#ekDP3Ko52ry7-filter)" fill="#0d68b9"/></g><g><path id="ekDP3Ko52ry9" d="M535.993114,676.441318c10.367597,1.891052,15.639111,7.209463,4.969962,17.693067-8.050867,6.344362-28.632819,17.81189-40.400379,15.879524-9.490776-3.212753-10.845896-14.110277-.596396-20.873843c7.439887-5.005194,25.81685-14.453866,36.026813-12.698748Z" transform="matrix(0 0 0 0 381.71355 558.654164)" opacity="0" fill="url(#ekDP3Ko52ry9-fill)" stroke="#1f58a8" stroke-width="3"/><path id="ekDP3Ko52ry10" d="M535.993114,676.441318c10.367597,1.891052,15.639111,7.209463,4.969962,17.693067-8.050867,6.344362-28.632819,17.81189-40.400379,15.879524-9.490776-3.212753-10.845896-14.110277-.596396-20.873843c7.439887-5.005194,25.81685-14.453866,36.026813-12.698748Z" transform="matrix(0 0 0 0 316.984257 423.072537)" opacity="0" fill="url(#ekDP3Ko52ry10-fill)" stroke="#1f58a8" stroke-width="3"/><path id="ekDP3Ko52ry11" d="M535.993114,676.441318c10.367597,1.891052,15.639111,7.209463,4.969962,17.693067-8.050867,6.344362-28.632819,17.81189-40.400379,15.879524-9.490776-3.212753-10.845896-14.110277-.596396-20.873843c7.439887-5.005194,25.81685-14.453866,36.026813-12.698748Z" transform="matrix(0 0 0 0 449.55847 549.678891)" opacity="0" fill="url(#ekDP3Ko52ry11-fill)" stroke="#1f58a8" stroke-width="3"/><path id="ekDP3Ko52ry12" d="M535.993114,676.441318c10.367597,1.891052,15.639111,7.209463,4.969962,17.693067-8.050867,6.344362-28.632819,17.81189-40.400379,15.879524-9.490776-3.212753-10.845896-14.110277-.596396-20.873843c7.439887-5.005194,25.81685-14.453866,36.026813-12.698748Z" transform="matrix(0 0 0 0 268.076237 512.947995)" opacity="0" fill="url(#ekDP3Ko52ry12-fill)" stroke="#1f58a8" stroke-width="3"/></g><g><circle r="2.89" transform="translate(149.837349 241.576153)" fill="#171973"/><circle id="ekDP3Ko52ry15" r="2.89" transform="translate(240.937349 316.246153)" fill="#0d8fb9"/><circle id="ekDP3Ko52ry16" r="2.89" transform="matrix(.6 0 0 0.6 179.617349 231.056153)" fill="#0d8fb9"/><circle r="2.89" transform="translate(214.95 502.24)" fill="#0d8fb9"/><circle id="ekDP3Ko52ry18" r="2.89" transform="matrix(.6 0 0 0.6 660.062813 304.064692)" fill="#0d8fb9"/><circle id="ekDP3Ko52ry19" r="2.89" transform="translate(661.92 487.85)" fill="#0d8fb9"/></g><g transform="matrix(.766044 0.642788-.642788 0.766044 413.31641-214.916478)"><g id="ekDP3Ko52ry21" transform="translate(-.000015 119.97733)"><g><g><path id="ekDP3Ko52ry24" d="M368.6,562.52c.06-17.78-10.77-25.44-10.77-31.26c0-5.81,16.54-11.63,16.54-17.44s-16.54-11.63-16.54-17.44s16.54-11.63,16.54-17.44-10.94-11.63-10.94-17.44s19.21-11.63,19.21-17.44-16.54-11.63-16.54-17.44s27.22-11.63,27.22-17.44-16.54-11.63-16.54-17.44s16.54-11.63,16.54-17.44-27.22-11.63-27.22-17.44s16.28-11.63,16.28-17.44-24.55-11.63-
+        .splash-overlay.revelar-site {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .splash-content {
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .splash-lamp-wrapper {
+            position: relative;
+            user-select: none;
+        }
+
+        .splash-lamp-icon {
+            font-size: 6.5rem;
+            filter: brightness(0.8) drop-shadow(0 0 15px rgba(251, 191, 36, 0.5));
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .splash-title {
+            color: #ffffff;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            font-weight: 800;
+        }
+
+        .splash-subtitle {
+            color: #00d2ff;
+            font-size: 1.05rem;
+            margin-top: -10px;
+        }
+
+        .btn-comecar {
+            background: linear-gradient(135deg, #00d2ff, #0284c7);
+            color: #0f172a;
+            border: none;
+            padding: 16px 50px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            text-transform: uppercase;
+        }
+
+        /* ==========================================
+           2. HEADER E PISCA-PISCA
+           ========================================== */
+        @keyframes piscarLuz {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 15px #f59e0b); }
+            50% { opacity: 0.4; filter: none; }
+        }
+
+        .lampada-pisca {
+            display: inline-block;
+            font-size: 2.2rem;
+            animation: piscarLuz 2.5s infinite ease-in-out;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+
+        /* ==========================================
+           3. OVERLAY DE LOGIN / CADASTRO
+           ========================================== */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
